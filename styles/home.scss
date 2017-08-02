@@ -24,8 +24,8 @@ body {
 .chatbar-username {
   border: 1px solid black;
   display: block;
-  height: 90px;
-  line-height: 90px;
+  height: 50px;
+  line-height: 50px;
   margin: 8px;
   padding: 0 9px;
 }
@@ -67,7 +67,7 @@ body {
 .navbar {
   background: Turquoise;
   border-bottom: 1px solid black;
-  height: 90px;
+  height: 50px;
   left: 0;
   padding: 0 10px;
   position: fixed;
@@ -81,8 +81,8 @@ body {
   float: left;
   font-weight: 700;
   font-size: 28px;
-  height: 90px;
-  line-height: 90px;
+  height: 50px;
+  line-height: 50px;
   padding: 0 10px;
   text-decoration: none;
 }
@@ -90,7 +90,7 @@ body {
 .navbar-user-count {
   float: right;
   font-size: 15px;
-  line-height: 90px;
+  line-height: 50px;
   padding: 0 10px;
   text-decoration: none;
 }
