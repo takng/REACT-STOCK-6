@@ -48,7 +48,8 @@ class App extends Component {
     }
     const content = this.state.currentUser.name + " name changed to " + name;
 
-    const newUser = Object.assign({}, this.state.currentUser, { name });
+    // const newUser = Object.assign({}, this.state.currentUser, { name });
+    const newUser = {...this.state.currentUser, name};
     this.state.currentUser.name = name;
     this.setState({currentUser: newUser});
 
