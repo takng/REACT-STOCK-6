@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import ChatBar     from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
+import TestComponent from './TestComponent.jsx';
+import Fetch from 'react-fetch';
 
 class App extends Component {
   constructor(props) {
@@ -65,6 +67,7 @@ class App extends Component {
           <h3 className="navbar-user-count">{ this.state.userCount } users online</h3>
         </nav>
         <MessageList messages={this.state.messages}/>
+        <TestComponent/>
         <ChatBar
           currentUser={this.state.currentUser}
           onMessageSend={this.sendMessage}
