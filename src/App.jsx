@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import ChatBar     from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
-import TestComponent from './TestComponent.jsx';
+// import TestComponent from './TestComponent.jsx';
 import Fetch from 'react-fetch';
+import Request from 'superagent';
 
 class App extends Component {
   constructor(props) {
@@ -10,9 +11,22 @@ class App extends Component {
     this.state = {
       currentUser : { name: 'Anonymous' },
       messages    : [],
-      userCount: 0
+      userCount: 0,
+      articles: []
     }
   }
+
+  componentWillMount() {
+    fetch('https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+  .then(results => {
+    return results.json();
+  }).then(data => {
+    let articles = data.articles
+    console.log(articles)
+    this.setState({articles: articles});
+  //console.log("state", this.state.articles);
+  })
+}
 
   componentDidMount() {
     this.websocket = new WebSocket("ws://localhost:3001");
@@ -34,6 +48,12 @@ class App extends Component {
           throw new Error("Unknown message type: " + userData.type);
       }
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+  }
+
+  componentWillUpdate(nextProps, nextState) {
   }
 
   sendMessage = (messageEvent) => {
@@ -60,14 +80,18 @@ class App extends Component {
   }
 
   render() {
+    var articles = this.state.articles.map((article) => {
+      return <div><b> {article.title}</b> <br/>{article.description} <br/>{article.url}</div>
+    });
+
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">REACT-STOCK</a>
           <h3 className="navbar-user-count">{ this.state.userCount } users online</h3>
         </nav>
+        <ul>{articles}</ul>
         <MessageList messages={this.state.messages}/>
-        <TestComponent/>
         <ChatBar
           currentUser={this.state.currentUser}
           onMessageSend={this.sendMessage}

@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 
 class TestComponent extends Component {
-  constructor() {
-    super ();
+  constructor(props) {
+    super (props);
     this.state = {
-      articles: ""
     };
  }
 
@@ -29,7 +28,7 @@ componentDidMount () {
   render(){
     if(!this.state.articles) return <p> Loading....</p>
       return (
-        this.state.articles
+        this.state.articles.results
   )}
 }
 
