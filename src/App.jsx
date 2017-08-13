@@ -18,10 +18,23 @@ class App extends Component {
 
   componentWillMount() {
     fetch('https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+   // fetch('https://newsapi.org/v1/articles?source=business-insider&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
   .then(results => {
     return results.json();
+     console.log(results)
   }).then(data => {
     let articles = data.articles
+    console.log(articles)
+    this.setState({articles: articles});
+  //console.log("state", this.state.articles);
+  })
+  //fetch('https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+  fetch('https://newsapi.org/v1/articles?source=business-insider&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+  .then(results => {
+    return results.json();
+     console.log(results)
+  }).then(data => {
+    let articles = this.state.articles.concat(data.articles)
     console.log(articles)
     this.setState({articles: articles});
   //console.log("state", this.state.articles);
@@ -79,18 +92,26 @@ class App extends Component {
     this.websocket.send(JSON.stringify(newMessage));
   }
 
+  updateSearch(){
+    this.search(this.refs.query.value)
+  }
+
+
+
   render() {
-    var articles = this.state.articles.map((article) => {
-      return <div><b> {article.title}</b> <br/>{article.description} <br/>{article.url}</div>
+    let articles = this.state.articles.map((article) => {
+      return <div><b>{article.title}</b> <br/>{article.description} <br/>{article.url}<br/><br/></div>
     });
 
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">REACT-STOCK</a>
-          <h3 className="navbar-user-count">{ this.state.userCount } users online</h3>
+          <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
         </nav>
+        <input ref="query" onChange={(e) => {this.updateSearch();}} type="text" />
         <ul>{articles}</ul>
+        <div><br/></div>
         <MessageList messages={this.state.messages}/>
         <ChatBar
           currentUser={this.state.currentUser}
@@ -99,6 +120,15 @@ class App extends Component {
       </div>
     );
   }
+
+  search(query){
+    var searchRegEx = new RegExp(`${query}`, 'i')
+    var articles = JSON.parse(this.state.articles);
+    var search = articles.filter(function(article){
+        return searchRegEx.test(article.title);
+    });
+  }
+
 }
 
 export default App;
