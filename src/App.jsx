@@ -100,7 +100,7 @@ class App extends Component {
 
   render() {
     let articles = this.state.articles.map((article) => {
-      return <div><b>{article.title}</b> <br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
+      return <div><b>{article.title}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
     });
 
     return (
