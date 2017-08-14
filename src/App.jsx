@@ -5,6 +5,12 @@ import MessageList from './MessageList.jsx';
 import Fetch from 'react-fetch';
 import Request from 'superagent';
 
+function searchingFor(term) {
+  return function(x) {
+    return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -12,32 +18,58 @@ class App extends Component {
       currentUser : { name: 'Anonymous' },
       messages    : [],
       userCount: 0,
-      articles: []
+      articles: [],
+      term: '',
+      stocks:''
     }
+
+    this.searchHandler = this.searchHandler.bind(this);
   }
 
   componentWillMount() {
-    fetch('https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
-   // fetch('https://newsapi.org/v1/articles?source=business-insider&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+    fetch('https://newsapi.org/v1/articles?source=the-wall-street-journal&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
   .then(results => {
     return results.json();
-     console.log(results)
+     //console.log(results)
   }).then(data => {
     let articles = data.articles
-    console.log(articles)
+    //console.log(articles)
     this.setState({articles: articles});
   //console.log("state", this.state.articles);
   })
-  //fetch('https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+
   fetch('https://newsapi.org/v1/articles?source=business-insider&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
   .then(results => {
     return results.json();
-     console.log(results)
+     //console.log(results)
   }).then(data => {
     let articles = this.state.articles.concat(data.articles)
-    console.log(articles)
+    //console.log(articles)
     this.setState({articles: articles});
   //console.log("state", this.state.articles);
+  })
+
+  fetch('https://newsapi.org/v1/articles?source=bloomberg&sortBy=top&apiKey=1a3af869aa784532972c9711041e4037')
+  .then(results => {
+    return results.json();
+     //console.log(results)
+  }).then(data => {
+    let articles = this.state.articles.concat(data.articles)
+    //console.log(articles)
+    this.setState({articles: articles});
+  //console.log("state", this.state.articles);
+  })
+
+  fetch('https://www.quandl.com/api/v3/datasets/WIKI/FB.json?api_key=rL7FiX8-ZQyXoEjg5YMa')
+  .then(results => {
+    return results.json();
+     //console.log(results)
+  }).then(data => {
+    let stocks = data.dataset
+    //console.log(stocks)
+    this.setState({stocks: stocks});
+    debugger
+  console.log("state", this.state.stocks.data[0]);
   })
 }
 
@@ -63,12 +95,6 @@ class App extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-  }
-
   sendMessage = (messageEvent) => {
     const {name, message} = messageEvent;
     const newMessage = {type: "incomingMessage", username: name, content: message};
@@ -92,14 +118,17 @@ class App extends Component {
     this.websocket.send(JSON.stringify(newMessage));
   }
 
-  updateSearch(){
-    this.search(this.refs.query.value)
+  searchHandler(event) {
+    this.setState({term: event.target.value})
   }
 
 
-
   render() {
-    let articles = this.state.articles.map((article) => {
+    // let stocks = this.state.stocks.data.map((stock) => {
+    //   return <div><b>{stock.name}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
+    // });
+    let stocks = this.state.stocks
+    let articles = this.state.articles.filter(searchingFor(this.state.term)).map((article) => {
       return <div><b>{article.title}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
     });
 
@@ -109,7 +138,8 @@ class App extends Component {
           <a href="/" className="navbar-brand">REACT-STOCK</a>
           <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
         </nav>
-        <input ref="query" onChange={(e) => {this.updateSearch();}} type="text" />
+        <ul>{stocks.name}</ul>
+        <input onChange={this.searchHandler} type="text" />
         <ul>{articles}</ul>
         <div><br/></div>
         <MessageList messages={this.state.messages}/>

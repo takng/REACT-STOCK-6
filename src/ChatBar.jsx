@@ -10,7 +10,7 @@ class ChatBar extends Component {
   }
 
   handleMessageChange = (event) => {
-    const messages = event.target.value;
+
     this.setState({messageValue: event.target.value});
   }
 
