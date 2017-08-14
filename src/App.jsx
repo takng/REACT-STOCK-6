@@ -25,6 +25,8 @@ class App extends Component {
     }
 
     this.searchHandler = this.searchHandler.bind(this);
+    this.searchTicker = this.searchTicker.bind(this);
+
   }
 
   componentWillMount() {
@@ -78,14 +80,14 @@ class App extends Component {
   // //stocks.data[0].forEach(item => { console.log(item) })
   // })
 
-  fetch('https://query2.finance.yahoo.com/v7/finance/options/AAPL')
-    .then(results => {
-      return results.json()
-    }).then(data => {
-      let stocks = data.optionChain.result[0].quote
-      //console.log(stocks)
-      this.setState({stocks: stocks});
-    })
+  // fetch(`https://query2.finance.yahoo.com/v7/finance/options/AAPL`)
+  //   .then(results => {
+  //     return results.json()
+  //   }).then(data => {
+  //     let stocks = data.optionChain.result[0].quote
+  //     //console.log(stocks)
+  //     this.setState({stocks: stocks});
+  //   })
 
 
 }
@@ -139,6 +141,20 @@ class App extends Component {
     this.setState({term: event.target.value})
   }
 
+  searchTicker(event) {
+    // console.log(event.target.value)
+    if(event.key === "Enter") {
+    fetch(`https://query2.finance.yahoo.com/v7/finance/options/${event.target.value}`)
+    .then(results => {
+      return results.json()
+    }).then(data => {
+      let stocks = data.optionChain.result[0].quote
+      //console.log(stocks)
+      this.setState({stocks: stocks});
+    })
+  }
+  }
+
 
   render() {
     let stocks = this.state.stocks
@@ -173,6 +189,7 @@ if (Object.keys(stocks).length > 0) {
             </tr>
           </tbody>
         </table>
+        <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
         <input onChange={this.searchHandler} type="text" />
         <ul>{articles}</ul>
         <div><br/></div>
@@ -185,7 +202,43 @@ if (Object.keys(stocks).length > 0) {
     );
   }
   else{
-    return <div> loading...</div>
+    return (
+      <div>
+        <nav className="navbar">
+          <a href="/" className="navbar-brand">REACT-STOCK</a>
+          <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
+        </nav>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Symbol</th>
+              <th>Price</th>
+              <th>High</th>
+              <th>Low</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
+        <input onChange={this.searchHandler} type="text" />
+        <ul>{articles}</ul>
+        <div><br/></div>
+        <MessageList messages={this.state.messages}/>
+        <ChatBar
+          currentUser={this.state.currentUser}
+          onMessageSend={this.sendMessage}
+         />
+      </div>
+    )
   }
   }
 
@@ -201,4 +254,3 @@ if (Object.keys(stocks).length > 0) {
 }
 
 export default App;
-
