@@ -20,7 +20,7 @@ class App extends Component {
       userCount: 0,
       articles: [],
       term: '',
-      stocks:''
+      stocks: {data: []}
     }
 
     this.searchHandler = this.searchHandler.bind(this);
@@ -68,8 +68,10 @@ class App extends Component {
     let stocks = data.dataset
     //console.log(stocks)
     this.setState({stocks: stocks});
-    debugger
-  console.log("state", this.state.stocks.data[0]);
+    //console.log("stocks", stocks);
+  //console.log("names", stocks.column_names);
+  //console.log("details", stocks.data[0]);
+  //stocks.data[0].forEach(item => { console.log(item) })
   })
 }
 
@@ -124,21 +126,42 @@ class App extends Component {
 
 
   render() {
-    // let stocks = this.state.stocks.data.map((stock) => {
-    //   return <div><b>{stock.name}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
-    // });
+    console.log(this.state.stocks)
     let stocks = this.state.stocks
     let articles = this.state.articles.filter(searchingFor(this.state.term)).map((article) => {
       return <div><b>{article.title}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
     });
 
+
+if (stocks.data.length > 0) {
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">REACT-STOCK</a>
           <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
         </nav>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Open</th>
+              <th>High</th>
+              <th>Low</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{stocks.data[0][0]}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
         <ul>{stocks.name}</ul>
+
+        <ul>{stocks.column_names}</ul>
+        <ul>{stocks.data[0]}</ul>
         <input onChange={this.searchHandler} type="text" />
         <ul>{articles}</ul>
         <div><br/></div>
@@ -150,14 +173,19 @@ class App extends Component {
       </div>
     );
   }
-
-  search(query){
-    var searchRegEx = new RegExp(`${query}`, 'i')
-    var articles = JSON.parse(this.state.articles);
-    var search = articles.filter(function(article){
-        return searchRegEx.test(article.title);
-    });
+  else{
+    return <div> loading...</div>
   }
+  }
+
+
+  // search(query){
+  //   var searchRegEx = new RegExp(`${query}`, 'i')
+  //   var articles = JSON.parse(this.state.articles);
+  //   var search = articles.filter(function(article){
+  //       return searchRegEx.test(article.title);
+  //   });
+  // }
 
 }
 
