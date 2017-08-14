@@ -20,7 +20,8 @@ class App extends Component {
       userCount: 0,
       articles: [],
       term: '',
-      stocks: []
+      stocks: {},
+
     }
 
     this.searchHandler = this.searchHandler.bind(this);
@@ -82,9 +83,11 @@ class App extends Component {
       return results.json()
     }).then(data => {
       let stocks = data.optionChain.result[0].quote
-      console.log(stocks)
+      //console.log(stocks)
       this.setState({stocks: stocks});
     })
+
+
 }
 
   componentDidMount() {
@@ -142,8 +145,8 @@ class App extends Component {
     let articles = this.state.articles.filter(searchingFor(this.state.term)).map((article) => {
       return <div><b>{article.title}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
     });
-
-if (stocks.length > 0) {
+    console.log("stock", stocks)
+if (Object.keys(stocks).length > 0) {
     return (
       <div>
         <nav className="navbar">
@@ -154,17 +157,19 @@ if (stocks.length > 0) {
           <thead>
             <tr>
               <th>Date</th>
-              <th>Open</th>
+              <th>Symbol</th>
+              <th>Price</th>
               <th>High</th>
               <th>Low</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{stocks.longName}</td>
+              <td>{stocks.symbol}</td>
+              <td>{stocks.regularMarketPrice}</td>
+              <td>{stocks.regularMarketDayHigh}</td>
+              <td>{stocks.regularMarketDayLow}</td>
             </tr>
           </tbody>
         </table>
