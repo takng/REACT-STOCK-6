@@ -20,7 +20,7 @@ class App extends Component {
       userCount: 0,
       articles: [],
       term: '',
-      stocks: {data: []}
+      stocks: []
     }
 
     this.searchHandler = this.searchHandler.bind(this);
@@ -60,19 +60,31 @@ class App extends Component {
   //console.log("state", this.state.articles);
   })
 
-  fetch('https://www.quandl.com/api/v3/datasets/WIKI/FB.json?api_key=rL7FiX8-ZQyXoEjg5YMa')
-  .then(results => {
-    return results.json();
-     //console.log(results)
-  }).then(data => {
-    let stocks = data.dataset
-    //console.log(stocks)
-    this.setState({stocks: stocks});
-    //console.log("stocks", stocks);
-  //console.log("names", stocks.column_names);
-  //console.log("details", stocks.data[0]);
-  //stocks.data[0].forEach(item => { console.log(item) })
-  })
+  // fetch('https://www.quandl.com/api/v3/datasets/WIKI/FB.json?api_key=rL7FiX8-ZQyXoEjg5YMa', {
+  //   mode: 'no-cors'
+  // })
+  // .then(results => {
+  //   console.log(results)
+  //   //return results.json();
+  //    //console.log(results)
+  // }).then(data => {
+  //   let stocks = data.dataset
+  //   //console.log(stocks)
+  //   this.setState({stocks: stocks});
+  //   //console.log("stocks", stocks);
+  // //console.log("names", stocks.column_names);
+  // //console.log("details", stocks.data[0]);
+  // //stocks.data[0].forEach(item => { console.log(item) })
+  // })
+
+  fetch('https://query2.finance.yahoo.com/v7/finance/options/AAPL')
+    .then(results => {
+      return results.json()
+    }).then(data => {
+      let stocks = data.optionChain.result[0].quote
+      console.log(stocks)
+      this.setState({stocks: stocks});
+    })
 }
 
   componentDidMount() {
@@ -126,14 +138,12 @@ class App extends Component {
 
 
   render() {
-    console.log(this.state.stocks)
     let stocks = this.state.stocks
     let articles = this.state.articles.filter(searchingFor(this.state.term)).map((article) => {
       return <div><b>{article.title}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
     });
 
-
-if (stocks.data.length > 0) {
+if (stocks.length > 0) {
     return (
       <div>
         <nav className="navbar">
@@ -151,17 +161,13 @@ if (stocks.data.length > 0) {
           </thead>
           <tbody>
             <tr>
-              <td>{stocks.data[0][0]}</td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
           </tbody>
         </table>
-        <ul>{stocks.name}</ul>
-
-        <ul>{stocks.column_names}</ul>
-        <ul>{stocks.data[0]}</ul>
         <input onChange={this.searchHandler} type="text" />
         <ul>{articles}</ul>
         <div><br/></div>
