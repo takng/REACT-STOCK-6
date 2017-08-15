@@ -3,7 +3,7 @@ import ChatBar     from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 // import TestComponent from './TestComponent.jsx';
 import Fetch from 'react-fetch';
-import Request from 'superagent';
+//import Request from 'superagent';
 
 function searchingFor(term) {
   return function(x) {
@@ -21,6 +21,7 @@ class App extends Component {
       articles: [],
       term: '',
       stocks: {},
+      news: []
 
     }
 
@@ -89,6 +90,16 @@ class App extends Component {
   //     this.setState({stocks: stocks});
   //   })
 
+fetch('http://finance.yahoo.com/rss/headline?s=AAPL')
+    .then(results => {
+      //console.log("results", results.json())
+      return results.text()
+    }).then(data => {
+      //console.log("data", data)
+       let news = this.parseXml(data).rss.channel.item
+       //console.log("news", news)
+      this.setState({news: news});
+    })
 
 }
 
@@ -155,13 +166,105 @@ class App extends Component {
   }
   }
 
+  parseXml(xml, arrayTags) {
+    var dom = null;
+    if (window.DOMParser)
+    {
+        dom = (new DOMParser()).parseFromString(xml, "text/xml");
+    }
+    else if (window.ActiveXObject)
+    {
+        dom = new ActiveXObject('Microsoft.XMLDOM');
+        dom.async = false;
+        if (!dom.loadXML(xml))
+        {
+            throw dom.parseError.reason + " " + dom.parseError.srcText;
+        }
+    }
+    else
+    {
+        throw "cannot parse xml string!";
+    }
+
+    function isArray(o)
+    {
+        return Object.prototype.toString.apply(o) === '[object Array]';
+    }
+
+    function parseNode(xmlNode, result)
+    {
+        if (xmlNode.nodeName == "#text") {
+            var v = xmlNode.nodeValue;
+            if (v.trim()) {
+               result['#text'] = v;
+            }
+            return;
+        }
+
+        var jsonNode = {};
+        var existing = result[xmlNode.nodeName];
+        if(existing)
+        {
+            if(!isArray(existing))
+            {
+                result[xmlNode.nodeName] = [existing, jsonNode];
+            }
+            else
+            {
+                result[xmlNode.nodeName].push(jsonNode);
+            }
+        }
+        else
+        {
+            if(arrayTags && arrayTags.indexOf(xmlNode.nodeName) != -1)
+            {
+                result[xmlNode.nodeName] = [jsonNode];
+            }
+            else
+            {
+                result[xmlNode.nodeName] = jsonNode;
+            }
+        }
+
+        if(xmlNode.attributes)
+        {
+            var length = xmlNode.attributes.length;
+            for(var i = 0; i < length; i++)
+            {
+                var attribute = xmlNode.attributes[i];
+                jsonNode[attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+
+        var length = xmlNode.childNodes.length;
+        for(var i = 0; i < length; i++)
+        {
+            parseNode(xmlNode.childNodes[i], jsonNode);
+        }
+    }
+
+    var result = {};
+    if(dom.childNodes.length)
+    {
+        parseNode(dom.childNodes[0], result);
+    }
+
+    return result;
+}
+
 
   render() {
+    let news = this.state.news.map((item) => {
+      console.log(item)
+      return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
+    });
+    console.log(news)
+
     let stocks = this.state.stocks
     let articles = this.state.articles.filter(searchingFor(this.state.term)).map((article) => {
       return <div><b>{article.title}</b><br/><img src={article.urlToImage}/><br/>{article.description} <br/><a href={article.url}>{article.url}</a><br/><br/></div>
     });
-    console.log("stock", stocks)
+    //console.log("stock", stocks)
 if (Object.keys(stocks).length > 0) {
     return (
       <div>
@@ -192,6 +295,7 @@ if (Object.keys(stocks).length > 0) {
         <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
         <input onChange={this.searchHandler} type="text" />
         <ul>{articles}</ul>
+        <ul>{news}</ul>
         <div><br/></div>
         <MessageList messages={this.state.messages}/>
         <ChatBar
@@ -231,6 +335,7 @@ if (Object.keys(stocks).length > 0) {
         <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
         <input onChange={this.searchHandler} type="text" />
         <ul>{articles}</ul>
+        <ul>{news}</ul>
         <div><br/></div>
         <MessageList messages={this.state.messages}/>
         <ChatBar
