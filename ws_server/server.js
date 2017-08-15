@@ -56,7 +56,10 @@ wss.on('connection', (ws) => {
         break;
       }
 
+    let xyz = '{ "name":"John", "age":30, "city":"New York"}'
+    //data = "APPLE STOCK NEWS HERE IS the NEWS"
     data = Object.assign({}, {id: uuidv1(), color: connectionColors[ws.id]}, message);
+
     wss.broadcast(data);
 
   });
