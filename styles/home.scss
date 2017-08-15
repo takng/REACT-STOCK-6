@@ -3,12 +3,17 @@
 
 body {
   background: white;
+  padding-left: 300px;
   color: black;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   margin: 80px 0;
 }
 
+.container{
+
+
+}
 .chatbar {
   background: Turquoise;
   border-top: 1px solid black;
@@ -37,6 +42,7 @@ body {
 .chatbar-username {
   flex: 3;
 }
+
 
 .message {
   display: flex;

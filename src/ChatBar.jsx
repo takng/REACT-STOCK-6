@@ -33,13 +33,11 @@ class ChatBar extends Component {
       height: '0px', width: '0px', border: 'none', padding: '0px'
     };
     return (
-      <form className="chatbar-username-form" onSubmit={this.handleSubmit}>
-        <footer className="chatbar">
+        <div className="chatbar">
           <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.state.nameValue} onChange={this.handleNameChange} />
           <input className="chatbar-message" placeholder="Type a message and hit ENTER" value={this.state.messageValue} onChange={this.handleMessageChange} />
           <input type="submit" style={ hiddenStyles } />
-        </footer>
-      </form>
+        </div>
     );
   }
 }

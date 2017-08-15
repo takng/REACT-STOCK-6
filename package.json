@@ -45,10 +45,11 @@
     "webpack-dev-server": "2.3.0"
   },
   "dependencies": {
+    "material-ui": "^0.19.0",
     "react": "15.4.2",
+    "react-columns": "^1.0.2",
     "react-dom": "15.4.2",
     "react-fetch": "0.0.9",
-    "react-search-input": "^0.11.2",
-    "superagent": "^3.5.2"
+    "react-search-input": "^0.11.2"
   }
 }

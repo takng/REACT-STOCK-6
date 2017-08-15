@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import ChatBar     from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
-// import TestComponent from './TestComponent.jsx';
 import Fetch from 'react-fetch';
-//import Request from 'superagent';
 
-function searchingFor(term) {
-  return function(x) {
-    return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
-  }
-}
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+
+// function searchingFor(term) {
+//   return function(x) {
+//     return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
+//   }
+// }
 
 class App extends Component {
   constructor(props) {
@@ -20,8 +24,9 @@ class App extends Component {
       userCount: 0,
       stocks: {},
       news: [],
+      open: false
     }
-
+    //this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
     this.searchTicker = this.searchTicker.bind(this);
 
@@ -48,6 +53,8 @@ class App extends Component {
       }
     };
   }
+
+
 
   sendMessage = (messageEvent) => {
     const {name, message} = messageEvent;
@@ -93,6 +100,8 @@ class App extends Component {
       })
     }
   }
+
+  handleToggle = () => this.setState({open: !this.state.open});
 
   parseXml(xml, arrayTags) {
     var dom = null;
@@ -159,15 +168,30 @@ class App extends Component {
     return result;
 }
 
+// onSetSidebarOpen = (open)  => {
+//     this.setState({sidebarOpen: open});
+//   }
 
   render() {
+    //var sidebarContent = <b>Sidebar content</b>;
     let news = this.state.news.map((item) => {
       return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
     let stocks = this.state.stocks
     if (Object.keys(stocks).length > 0) {
         return (
-          <div>
+          <MuiThemeProvider>
+            <div className = "container">
+              <div>
+                <RaisedButton
+                  label="Toggle Drawer"
+                  onClick={this.handleToggle}
+                />
+                <Drawer open={this.state.open}>
+                  <MenuItem>Menu Item</MenuItem>
+                  <MenuItem>Menu Item 2</MenuItem>
+                </Drawer>
+              </div>
             <nav className="navbar">
               <a href="/" className="navbar-brand">REACT-STOCK</a>
               <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
@@ -213,16 +237,31 @@ class App extends Component {
               onMessageSend={this.sendMessage}
              />
           </div>
+          </MuiThemeProvider>
         );
       }
       else{
         return (
+<MuiThemeProvider>
           <div>
+           <div>
+            <RaisedButton
+              label="Toggle Drawer"
+              onClick={this.handleToggle}
+            />
+            <Drawer open={this.state.open}>
+              <MenuItem>Menu Item</MenuItem>
+              <MenuItem>Menu Item 2</MenuItem>
+            </Drawer>
+          </div>
+
             <nav className="navbar">
               <a href="/" className="navbar-brand">REACT-STOCK</a>
               <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
             </nav>
+
             <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
+
             <table>
               <thead>
                 <tr>
@@ -257,6 +296,7 @@ class App extends Component {
               onMessageSend={this.sendMessage}
              />
           </div>
+          </MuiThemeProvider>
         )
       }
       }
