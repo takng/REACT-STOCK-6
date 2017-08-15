@@ -255,10 +255,9 @@ fetch('http://finance.yahoo.com/rss/headline?s=AAPL')
 
   render() {
     let news = this.state.news.map((item) => {
-      console.log(item)
       return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
-    console.log(news)
+
 
     let stocks = this.state.stocks
     let articles = this.state.articles.filter(searchingFor(this.state.term)).map((article) => {
