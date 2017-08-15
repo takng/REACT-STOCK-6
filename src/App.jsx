@@ -90,16 +90,16 @@ class App extends Component {
   //     this.setState({stocks: stocks});
   //   })
 
-fetch('http://finance.yahoo.com/rss/headline?s=AAPL')
-    .then(results => {
-      //console.log("results", results.json())
-      return results.text()
-    }).then(data => {
-      //console.log("data", data)
-       let news = this.parseXml(data).rss.channel.item
-       //console.log("news", news)
-      this.setState({news: news});
-    })
+// fetch('http://finance.yahoo.com/rss/headline?s=AAPL')
+//     .then(results => {
+//       //console.log("results", results.json())
+//       return results.text()
+//     }).then(data => {
+//       //console.log("data", data)
+//        let news = this.parseXml(data).rss.channel.item
+//        //console.log("news", news)
+//       this.setState({news: news});
+//     })
 
 }
 
@@ -163,6 +163,18 @@ fetch('http://finance.yahoo.com/rss/headline?s=AAPL')
       //console.log(stocks)
       this.setState({stocks: stocks});
     })
+
+    fetch(`http://finance.yahoo.com/rss/headline?s=${event.target.value}`)
+    .then(results => {
+      //console.log("results", results.json())
+      return results.text()
+    }).then(data => {
+      //console.log("data", data)
+       let news = this.parseXml(data).rss.channel.item
+       //console.log("news", news)
+      this.setState({news: news});
+    })
+
   }
   }
 
@@ -292,8 +304,7 @@ if (Object.keys(stocks).length > 0) {
           </tbody>
         </table>
         <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
-        <input onChange={this.searchHandler} type="text" />
-        <ul>{articles}</ul>
+
         <ul>{news}</ul>
         <div><br/></div>
         <MessageList messages={this.state.messages}/>
@@ -311,6 +322,7 @@ if (Object.keys(stocks).length > 0) {
           <a href="/" className="navbar-brand">REACT-STOCK</a>
           <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
         </nav>
+        <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
         <table>
           <thead>
             <tr>
@@ -331,9 +343,6 @@ if (Object.keys(stocks).length > 0) {
             </tr>
           </tbody>
         </table>
-        <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
-        <input onChange={this.searchHandler} type="text" />
-        <ul>{articles}</ul>
         <ul>{news}</ul>
         <div><br/></div>
         <MessageList messages={this.state.messages}/>
