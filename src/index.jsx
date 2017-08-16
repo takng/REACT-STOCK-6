@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.jsx';
 import Fetch from 'react-fetch';
-import Request from 'superagent';
+//import Request from 'superagent';
 
 
 
