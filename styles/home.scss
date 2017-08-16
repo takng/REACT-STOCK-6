@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
-@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
 
 body {
   background: white;
+  padding-right: 200px;
+  padding-left: 300px;
   color: black;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
@@ -10,7 +11,7 @@ body {
 }
 
 .chatbar {
-  background: Turquoise;
+  background: white;
   border-top: 1px solid black;
   bottom: 0;
   display: flex;
@@ -22,7 +23,6 @@ body {
 
 .chatbar-message,
 .chatbar-username {
-  border: 1px solid black;
   display: block;
   height: 50px;
   line-height: 50px;
@@ -65,7 +65,7 @@ body {
 }
 
 .navbar {
-  background: Turquoise;
+  background: white;
   border-bottom: 1px solid black;
   height: 50px;
   left: 0;
@@ -93,4 +93,62 @@ body {
   line-height: 50px;
   padding: 0 10px;
   text-decoration: none;
+}
+
+html, body, section {
+  height: 100%;
+}
+
+body {
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 1.2rem;
+  line-height: 150%;
+  text-align: left;
+}
+
+div {
+  display: relative;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 0.9em;
+  margin: 0 0 0.75rem 0;
+}
+
+/* Pattern styles */
+.container {
+  display: flex;
+  padding-right: 100px;
+}
+
+.left-half {
+  background-color: grey;
+  flex: 1;
+  padding: 1rem;
+}
+
+.right-half {
+  background-color: grey;
+  flex: 1;
+  padding: 1rem;
+}
+
+input {
+  width: 150px !important;
+}
+.new{
+font-size: 1.5  em;
+}
+.stocks{
+font-size: 1.5em;
+}
+
+td {
+  border:1px solid black;
+}
+
+th {
+  border:1px solid black;
 }
