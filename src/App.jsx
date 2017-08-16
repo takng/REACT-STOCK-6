@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import ChatBar     from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 import Fetch from 'react-fetch';
-
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+
+
+
 
 
 // function searchingFor(term) {
@@ -29,6 +32,26 @@ class App extends Component {
     //this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
     this.searchTicker = this.searchTicker.bind(this);
+
+  }
+
+  componentWillMount() {
+    fetch(`https://query2.finance.yahoo.com/v7/finance/options/AAPL`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        let stocks = data.optionChain.result[0].quote
+        this.setState({stocks: stocks});
+        })
+
+        fetch(`http://finance.yahoo.com/rss/headline?s=AAPL`)
+      .then(results => {
+        return results.text()
+      }).then(data => {
+         let news = this.parseXml(data).rss.channel.item
+        this.setState({news: news});
+      })
+
 
   }
 
@@ -182,54 +205,67 @@ class App extends Component {
         return (
           <MuiThemeProvider>
             <div className = "container">
+              <nav className="navbar">
+                <a href="/" className="navbar-brand">REACT-STOCK</a>
+                <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
+              </nav>
               <div>
                 <RaisedButton
                   label="Toggle Drawer"
                   onClick={this.handleToggle}
                 />
+                <div><br/></div>
                 <Drawer open={this.state.open}>
                   <MenuItem>Menu Item</MenuItem>
                   <MenuItem>Menu Item 2</MenuItem>
                 </Drawer>
               </div>
-            <nav className="navbar">
-              <a href="/" className="navbar-brand">REACT-STOCK</a>
-              <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
-            </nav>
-            <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Symbol</th>
-                  <th>Price</th>
-                  <th>Open</th>
-                  <th>High</th>
-                  <th>Low</th>
-                  <th>52 Week High</th>
-                  <th>52 Week Low</th>
-                  <th>Volume</th>
-                  <th>Market Cap</th>
-                  <th>Dividend Yield</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{stocks.longName}</td>
-                  <td>{stocks.symbol}</td>
-                  <td>{stocks.regularMarketPrice}</td>
-                  <td>{stocks.regularMarketOpen}</td>
-                  <td>{stocks.regularMarketDayHigh}</td>
-                  <td>{stocks.regularMarketDayLow}</td>
-                  <td>{stocks.fiftyTwoWeekHigh}</td>
-                  <td>{stocks.fiftyTwoWeekLow}</td>
-                  <td>{stocks.regularMarketVolume}</td>
-                  <td>{stocks.marketCap}</td>
-                  <td>{stocks.trailingAnnualDividendYield}</td>
-                </tr>
-              </tbody>
-            </table>
-            <ul>{news}</ul>
+              <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
+              <div><br/></div>
+              <section className="container">
+              <style>{`
+                 table{
+                  border:1px solid black;
+                  }
+                  `}</style>
+                <div className="left-half">
+                  <article>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Symbol</th>
+                          <th>Price</th>
+                          <th>Open</th>
+                          <th>High</th>
+                          <th>Low</th>
+                          <th>52 Week High</th>
+                          <th>52 Week Low</th>
+                          <th>Volume</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{stocks.longName}</td>
+                          <td>{stocks.symbol}</td>
+                          <td>{stocks.regularMarketPrice}</td>
+                          <td>{stocks.regularMarketOpen}</td>
+                          <td>{stocks.regularMarketDayHigh}</td>
+                          <td>{stocks.regularMarketDayLow}</td>
+                          <td>{stocks.fiftyTwoWeekHigh}</td>
+                          <td>{stocks.fiftyTwoWeekLow}</td>
+                          <td>{stocks.regularMarketVolume}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </article>
+                </div>
+                <div className="right-half">
+                  <article>
+                  <ul>{news}</ul>
+                  </article>
+                </div>
+              </section>
             <div><br/></div>
             <MessageList messages={this.state.messages}/>
             <ChatBar
@@ -242,40 +278,47 @@ class App extends Component {
       }
       else{
         return (
-<MuiThemeProvider>
-          <div>
-           <div>
+          <MuiThemeProvider>
+          <div className = "container">
+          <nav className="navbar">
+              <a href="/" className="navbar-brand">REACT-STOCK</a>
+              <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
+            </nav>
+
+             <div>
             <RaisedButton
               label="Toggle Drawer"
               onClick={this.handleToggle}
             />
+            <div><br/></div>
             <Drawer open={this.state.open}>
               <MenuItem>Menu Item</MenuItem>
               <MenuItem>Menu Item 2</MenuItem>
             </Drawer>
           </div>
-
-            <nav className="navbar">
-              <a href="/" className="navbar-brand">REACT-STOCK</a>
-              <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
-            </nav>
-
-            <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
-
-            <table>
+          <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
+           <div><br/></div>
+           <section className="container">
+           <style>{`
+                 table{
+                  border:1px solid black;
+                  }
+                  `}</style>
+                <div className="left-half">
+                  <article>
+                  <table>
               <thead>
+              <h1 className="stocks">All you need to know about stocks</h1>
                 <tr>
-                  <th>Name</th>
-                  <th>Symbol</th>
-                  <th>Price</th>
-                  <th>Open</th>
-                  <th>High</th>
-                  <th>Low</th>
-                  <th>52 Week High</th>
-                  <th>52 Week Low</th>
-                  <th>Volume</th>
-                  <th>Market Cap</th>
-                  <th>Dividend Yield</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -287,8 +330,16 @@ class App extends Component {
                   <td></td>
                 </tr>
               </tbody>
-            </table>
-            <ul>{news}</ul>
+               </table>
+                  </article>
+                </div>
+                <div className="right-half">
+                  <article>
+                  <h1 className="new">The lastest News Updates</h1>
+                    <ul>{news}</ul>
+                  </article>
+                </div>
+              </section>
             <div><br/></div>
             <MessageList messages={this.state.messages}/>
             <ChatBar

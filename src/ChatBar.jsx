@@ -34,9 +34,6 @@ class ChatBar extends Component {
     };
     return (
         <div className="chatbar">
-          <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.state.nameValue} onChange={this.handleNameChange} />
-          <input className="chatbar-message" placeholder="Type a message and hit ENTER" value={this.state.messageValue} onChange={this.handleMessageChange} />
-          <input type="submit" style={ hiddenStyles } />
         </div>
     );
   }
