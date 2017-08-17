@@ -12,6 +12,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
 
+
 // function searchingFor(term) {
 //   return function(x) {
 //     return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
@@ -27,11 +28,13 @@ class App extends Component {
       userCount: 0,
       stocks: {},
       news: [],
-      open: false
+      open: false,
+      names: ["AAPL", "TSLA", "MSFT"]
     }
     //this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
-    this.searchTicker = this.searchTicker.bind(this);
+    //this.searchTicker = this.searchTicker.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
   }
 
@@ -104,9 +107,29 @@ class App extends Component {
     this.setState({term: event.target.value})
   }
 
-  searchTicker(event) {
-    if(event.key === "Enter") {
-      fetch(`https://query2.finance.yahoo.com/v7/finance/options/${event.target.value}`)
+  // searchTicker(event) {
+  //   if(event.key === "Enter") {
+  //     fetch(`https://query2.finance.yahoo.com/v7/finance/options/${event.target.value}`)
+  //     .then(results => {
+  //       return results.json()
+  //     }).then(data => {
+  //       let stocks = data.optionChain.result[0].quote
+  //       this.setState({stocks: stocks});
+  //     })
+
+  //     fetch(`http://finance.yahoo.com/rss/headline?s=${event.target.value}`)
+  //     .then(results => {
+  //       return results.text()
+  //     }).then(data => {
+  //        let news = this.parseXml(data).rss.channel.item
+  //       this.setState({news: news});
+  //     })
+  //   }
+  // }
+
+  handleClick(name) {
+    console.log(name)
+      fetch(`https://query2.finance.yahoo.com/v7/finance/options/${name}`)
       .then(results => {
         return results.json()
       }).then(data => {
@@ -114,14 +137,13 @@ class App extends Component {
         this.setState({stocks: stocks});
       })
 
-      fetch(`http://finance.yahoo.com/rss/headline?s=${event.target.value}`)
+      fetch(`http://finance.yahoo.com/rss/headline?s=${name}`)
       .then(results => {
         return results.text()
       }).then(data => {
          let news = this.parseXml(data).rss.channel.item
         this.setState({news: news});
       })
-    }
   }
 
   handleToggle = () => this.setState({open: !this.state.open});
@@ -200,6 +222,10 @@ class App extends Component {
     let news = this.state.news.map((item) => {
       return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
+
+    let names = this.state.names.map((name) => {
+      return <MenuItem onClick={ (event) => this.handleClick(name) }>{name}</MenuItem>
+    });
     let stocks = this.state.stocks
     if (Object.keys(stocks).length > 0) {
         return (
@@ -216,11 +242,11 @@ class App extends Component {
                 />
                 <div><br/></div>
                 <Drawer open={this.state.open}>
-                  <MenuItem>Menu Item</MenuItem>
-                  <MenuItem>Menu Item 2</MenuItem>
+                <div><br/></div>
+                <h1>Your WatchList</h1>
+                  {names}
                 </Drawer>
               </div>
-              <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
               <div><br/></div>
               <section className="container">
               <style>{`
@@ -284,7 +310,6 @@ class App extends Component {
               <a href="/" className="navbar-brand">REACT-STOCK</a>
               <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
             </nav>
-
              <div>
             <RaisedButton
               label="Toggle Drawer"
@@ -292,11 +317,11 @@ class App extends Component {
             />
             <div><br/></div>
             <Drawer open={this.state.open}>
-              <MenuItem>Menu Item</MenuItem>
-              <MenuItem>Menu Item 2</MenuItem>
+              <div><br/></div>
+              <h1>Your WatchList</h1>
+              <MenuItem>{names}</MenuItem>
             </Drawer>
           </div>
-          <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
            <div><br/></div>
            <section className="container">
            <style>{`
