@@ -1,8 +1,8 @@
 "use strict"
 
-// require("dotenv").config()
+require("dotenv").config()
 
-const PORT        = 6000
+const PORT        = 3002
 const ENV         = process.env.ENV || "development"
 const express     = require("express")
 const bodyParser  = require("body-parser")
@@ -141,5 +141,5 @@ app.get("/logout",
   })
 
 app.listen(PORT, () => {
-  console.log("REACT-STOCK listening on port " + PORT)
+  console.log("DB-STOCK listening on port " + PORT)
 })
