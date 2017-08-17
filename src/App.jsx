@@ -14,17 +14,6 @@ import FontIcon from 'material-ui/FontIcon';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {red500} from 'material-ui/styles/colors';
 
-
-
-
-
-
-// function searchingFor(term) {
-//   return function(x) {
-//     return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
-//   }
-// }
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -38,14 +27,12 @@ class App extends Component {
       names: ["AAPL", "TSLA", "MSFT"],
       currentTicker:""
     }
-    //this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+    
     this.searchHandler = this.searchHandler.bind(this);
     this.searchTicker = this.searchTicker.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
-    
-
   }
 
   componentWillMount() {
@@ -56,8 +43,7 @@ class App extends Component {
         let stocks = data.optionChain.result[0].quote
         this.setState({stocks: stocks});
         })
-
-        fetch(`http://finance.yahoo.com/rss/headline?s=AAPL`)
+    fetch(`http://finance.yahoo.com/rss/headline?s=AAPL`)
       .then(results => {
         return results.text()
       }).then(data => {
@@ -91,7 +77,6 @@ class App extends Component {
   sendMessage = (messageEvent) => {
     const {name, message} = messageEvent;
     const newMessage = {type: "incomingMessage", username: name, content: message};
-
     this.websocket.send(JSON.stringify(newMessage));
     this.setName(name);
   }
@@ -141,13 +126,14 @@ class App extends Component {
   }
 
   handleAdd() {
-    console.log(this.state.currentTicker)
     let newScope = this.state.names.concat(this.state.currentTicker)
     this.setState({names:newScope})
+    this.setState({currentTicker: ''});
   }
 
   handleOnChange = (event) => {
     this.setState({currentTicker: event.target.value.toUpperCase()});
+
   }
   
   searchTicker(event) {
@@ -160,7 +146,6 @@ class App extends Component {
         this.setState({
           stocks: stocks,
         });
-        console.log(this.state)
       })
 
       fetch(`http://finance.yahoo.com/rss/headline?s=${this.state.currentTicker}`)
@@ -180,20 +165,19 @@ class App extends Component {
     var dom = null;
     if (window.DOMParser){
         dom = (new DOMParser()).parseFromString(xml, "text/xml");
-    } else if (window.ActiveXObject) {
+    }else if (window.ActiveXObject) {
         dom = new ActiveXObject('Microsoft.XMLDOM');
         dom.async = false;
         if (!dom.loadXML(xml)) {
             throw dom.parseError.reason + " " + dom.parseError.srcText;
         }
-    } else {
+    }else {
         throw "cannot parse xml string!";
     }
 
     function isArray(o) {
         return Object.prototype.toString.apply(o) === '[object Array]';
     }
-
     function parseNode(xmlNode, result) {
         if (xmlNode.nodeName == "#text") {
             var v = xmlNode.nodeValue;
@@ -202,7 +186,6 @@ class App extends Component {
             }
             return;
         }
-
         var jsonNode = {};
         var existing = result[xmlNode.nodeName];
         if(existing) {
@@ -218,7 +201,6 @@ class App extends Component {
                 result[xmlNode.nodeName] = jsonNode;
             }
         }
-
         if(xmlNode.attributes) {
             var length = xmlNode.attributes.length;
             for(var i = 0; i < length; i++) {
@@ -226,30 +208,19 @@ class App extends Component {
                 jsonNode[attribute.nodeName] = attribute.nodeValue;
             }
         }
-
         var length = xmlNode.childNodes.length;
         for(var i = 0; i < length; i++) {
             parseNode(xmlNode.childNodes[i], jsonNode);
         }
     }
-
     var result = {};
     if(dom.childNodes.length) {
         parseNode(dom.childNodes[0], result);
     }
-
     return result;
 }
 
-// onSetSidebarOpen = (open)  => {
-//     this.setState({sidebarOpen: open});
-//   }
-
   render() {
-    //var sidebarContent = <b>Sidebar content</b>;
-    const style = {
-      marginRight: 20,
-    };
     let news = this.state.news.map((item) => {
       return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
@@ -257,13 +228,14 @@ class App extends Component {
     let names = this.state.names.map((name) => {
       return <MenuItem onClick={ 
         (event) => this.handleClick(name) 
-      }>
+      } >
       {name}
       <IconButton tooltip="SVG Icon" >
         <ContentRemove color={blue500} onClick={ (event) => this.handleRemove(name) }/>
         </IconButton>
         </MenuItem>
     });
+
     let stocks = this.state.stocks
     if (Object.keys(stocks).length > 0) {
         return (
@@ -275,29 +247,21 @@ class App extends Component {
               </nav>
               <div>
                 <RaisedButton
-                  label="Toggle Drawer"
+                  label="WatchList"
                   onClick={this.handleToggle}
                 />
                 <div><br/></div>
-                <Drawer className="drawer" open={this.state.open}>
+                <Drawer open={this.state.open}>
                 <div><br/></div>
-                <h1>Your WatchList</h1>
+                <h1><b>Your WatchList</b></h1>
                   {names}
                 </Drawer>
               </div>
               <form>
               <input onKeyPress={this.searchTicker} onChange={this.handleOnChange} value={this.state.currentTicker} type="text" placeholder="Enter a Ticker"/>
-              <IconButton tooltip="SVG Icon" >
-                  <ContentAdd color={red500} onClick= {this.handleAdd}/>
-                </IconButton>
               </form>
               <div><br/></div>
               <section className="container">
-              <style>{`
-                 table{
-                  border:1px solid black;
-                  }
-                  `}</style>
                 <div className="left-half">
                   <article>
                     <table>
@@ -328,6 +292,15 @@ class App extends Component {
                         </tr>
                       </tbody>
                     </table>
+                    <div>
+                      <RaisedButton
+                        label="Add Stock"
+                        labelPosition="before"
+                        primary={true}
+                        icon={<ContentAdd/>}
+                        onClick= {this.handleAdd}
+                      />
+                    </div>
                   </article>
                 </div>
                 <div className="right-half">
@@ -346,8 +319,7 @@ class App extends Component {
           </div>
           </MuiThemeProvider>
         );
-      }
-      else{
+      }else {
         return (
           <MuiThemeProvider>
           <div className = "container">
@@ -357,7 +329,7 @@ class App extends Component {
             </nav>
              <div>
             <RaisedButton
-              label="Toggle Drawer"
+              label="WatchList"
               onClick={this.handleToggle}
             />
             <div><br/></div>
@@ -370,11 +342,6 @@ class App extends Component {
           <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
            <div><br/></div>
            <section className="container">
-           <style>{`
-                 table{
-                  border:1px solid black;
-                  }
-                  `}</style>
                 <div className="left-half">
                   <article>
                   <table>
@@ -402,6 +369,14 @@ class App extends Component {
                 </tr>
               </tbody>
                </table>
+                 <div>
+                      <RaisedButton
+                        label="Add Stock"
+                        labelPosition="before"
+                        primary={true}
+                        icon={<ContentAdd/>}
+                      />
+                    </div>
                   </article>
                 </div>
                 <div className="right-half">
@@ -421,17 +396,8 @@ class App extends Component {
           </MuiThemeProvider>
         )
       }
-      }
-
-
-      // search(query){
-      //   var searchRegEx = new RegExp(`${query}`, 'i')
-      //   var articles = JSON.parse(this.state.articles);
-      //   var search = articles.filter(function(article){
-      //       return searchRegEx.test(article.title);
-      //   });
-      // }
-
     }
+
+  }
 
     export default App;
