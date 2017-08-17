@@ -24,7 +24,8 @@ class App extends Component {
       stocks: {},
       news: [],
       open: false,
-      names: ["AAPL", "TSLA", "MSFT"],
+      //new Set acts like an array
+      names: new Set(["AAPL", "TSLA", "MSFT"]),
       currentTicker:""
     }
     
@@ -117,18 +118,22 @@ class App extends Component {
   }
 
   handleRemove(name) {
-    let updatedScope = this.state.names.filter((item) => { 
-        return item != name 
-      })
+    // let updatedScope = this.state.names.filter((item) => { 
+    //     return item != name 
+    //   })
+    this.state.names.delete(name)
     this.setState({
-      names: updatedScope
+      names: this.state.names
     })
   }
 
   handleAdd() {
-    let newScope = this.state.names.concat(this.state.currentTicker)
-    this.setState({names:newScope})
-    this.setState({currentTicker: ''});
+    // if currentTicker is false for example empty is false it should not do anything
+      if (!this.state.currentTicker) return
+      //so this adds currentTicker to the state.names and then set the state 
+      this.state.names.add(this.state.currentTicker)
+      this.setState({currentTicker: '', names: this.state.names});
+    
   }
 
   handleOnChange = (event) => {
@@ -225,7 +230,7 @@ class App extends Component {
       return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
 
-    let names = this.state.names.map((name) => {
+    let names = [...this.state.names].map((name) => {
       return <MenuItem onClick={ 
         (event) => this.handleClick(name) 
       } >
@@ -292,6 +297,7 @@ class App extends Component {
                         </tr>
                       </tbody>
                     </table>
+                     <div><br/></div>
                     <div>
                       <RaisedButton
                         label="Add Stock"
