@@ -124,13 +124,13 @@ h1 {
 }
 
 .left-half {
-  background-color: grey;
+  background-color: black;
   flex: 1;
   padding: 1rem;
 }
 
 .right-half {
-  background-color: grey;
+  background-color: black;
   flex: 1;
   padding: 1rem;
 }
@@ -146,9 +146,9 @@ font-size: 1.5em;
 }
 
 td {
-  border:1px solid black;
+  border:1px solid grey;
 }
 
 th {
-  border:1px solid black;
+  border:1px solid grey;
 }
