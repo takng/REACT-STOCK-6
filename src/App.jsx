@@ -142,15 +142,17 @@ class App extends Component {
   }
   
   searchTicker(event) {
-    if(event.key === "Enter") {
+    if(event.key === "Enter")  {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
       .then(results => {
-        return results.json()
+        if (results.status === 404) this.setState({ wrongInput: true })
+        else return results.json()
       }).then(data => {
         let stocks = data.optionChain.result[0].quote
         this.setState({
           stocks: stocks,
-        });
+        })
+
       })
 
       fetch(`http://finance.yahoo.com/rss/headline?s=${this.state.currentTicker}`)
@@ -263,7 +265,22 @@ class App extends Component {
                 </Drawer>
               </div>
               <form>
-              <input onKeyPress={this.searchTicker} onChange={this.handleOnChange} value={this.state.currentTicker} type="text" placeholder="Enter a Ticker"/>
+              <input 
+                onKeyPress={this.searchTicker} 
+                onChange={this.handleOnChange} 
+                value={this.state.currentTicker} 
+                type="text" 
+                placeholder="Enter a Ticker"
+                style={{
+                  ...(this.state.wrongInput ? 
+                    {
+                      borderColor: '#ff3667',
+                      outline: 0,
+                      boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6)'
+                    }
+                    : {})
+                }}
+              />
               </form>
               <div><br/></div>
               <section className="container">
