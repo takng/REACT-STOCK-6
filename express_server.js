@@ -75,13 +75,21 @@ function renderHelper(req, res) {
 
 // Gets a contribution by user
 app.get("/symbols/:user_id", (req, res) => {
+  let arr = [];
   knex("users")
   .join("user_symbols", "users.id", "=", "user_symbols.user_id")
   .where({user_id: req.params.user_id})
   .andWhere("favorite", true)
   .select("symbol")
   .then((results) => {
-    res.json(results)
+    //results.map(arr => Object.values(arr));
+    // res.json(results)
+    results = results.map(function(o){
+      for(let i in o){
+         arr.push(o[i])
+      }
+    });
+    res.json(arr)
   })
   .catch(function(error) {
     console.log(error)
