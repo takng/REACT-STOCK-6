@@ -42,7 +42,16 @@
     "sockjs-client": "^1.1.2",
     "style-loader": "0.13.1",
     "webpack": "2.2.1",
-    "webpack-dev-server": "2.3.0"
+    "webpack-dev-server": "2.3.0",
+    "dotenv": "^2.0.0",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "express-session": "^1.15.4",
+    "knex": "^0.13.0",
+    "knex-logger": "^0.1.0",
+    "morgan": "^1.7.0",
+    "node-sass-middleware": "^0.9.8",
+    "pg": "^7.1.2"
   },
   "dependencies": {
     "knex": "^0.13.0",
