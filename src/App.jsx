@@ -137,6 +137,7 @@ class App extends Component {
   }
 
   handleOnChange = (event) => {
+    this.setState({wrongInput: false})
     this.setState({currentTicker: event.target.value.toUpperCase()});
 
   }
@@ -145,14 +146,16 @@ class App extends Component {
     if(event.key === "Enter")  {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
       .then(results => {
-        if (results.status === 404) this.setState({ wrongInput: true , currentTicker: ''})
+        if (results.status === 404) {
+          this.setState({ wrongInput: true })
+          this.setState({currentTicker: ""})
+        }
         else return results.json()
       }).then(data => {
         let stocks = data.optionChain.result[0].quote
         this.setState({
           stocks: stocks,
         })
-
       })
 
       fetch(`http://finance.yahoo.com/rss/headline?s=${this.state.currentTicker}`)
@@ -271,17 +274,18 @@ class App extends Component {
                 value={this.state.currentTicker} 
                 type="text" 
                 placeholder="Enter a Ticker"
-                style={{
-                  ...(this.state.wrongInput ? 
-                    {
-                      borderColor: '#ff3667',
-                      outline: 0,
-                      boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6)'
-                    }
-                    : {})
-                }}
+                // style={{
+                //   ...(this.state.wrongInput ? 
+                //     {
+                //       borderColor: '#ff3667',
+                //       outline: 0,
+                //       boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6)'
+                //     }
+                //     : {})
+                // }}
               />
               </form>
+              {this.state.wrongInput && <span style={{ color: 'tomato' }}>symbol doesn't exist</span>}
               <div><br/></div>
               <section className="container">
                 <LeftHalf stocks={stocks} handleAdd={this.handleAdd}/>
