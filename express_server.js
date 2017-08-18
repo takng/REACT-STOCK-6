@@ -99,6 +99,36 @@ app.get("/users", (req, res) => {
   })
 })
 
+/*
+app.get("/users", (req, res) => {
+  knex("users")
+  .then((results) => {
+    let users = results
+    results.forEach(function(user) {
+      knex('users')
+      .join("user_symbols", "users.id", "=", "user_symbols.user_id")
+      .where({user_id: user.id})
+      .andWhere("favorite", true)
+      .select("symbol")
+      .then((results) => {
+        users = users.map((u) => {
+          if (u.id == user.id) {
+            u.symbols = results
+          }
+          return u
+        })
+      }).then(() => {
+        res.json(users)
+      })
+    })
+    // res.json(results)
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+})
+*/
+
 // Home page
 app.get("/", (req, res) => {
   renderHelper(req, res)

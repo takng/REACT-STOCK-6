@@ -1,31 +1,33 @@
-import React, {Component} from 'react';
 import Fetch from 'react-fetch';
+import React, {Component} from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import {blue500} from 'material-ui/styles/colors';
+import {red500} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import {red500} from 'material-ui/styles/colors';
-import LeftHalf from './LeftHalf'
-import RightHalf from './RightHalf'
+import RightHalf from './RightHalf';
+import LeftHalf from './LeftHalf';
+
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser : { name: 'Anonymous' },
-      messages    : [],
-      userCount: 0,
+      currentUser: {
+        id: 1
+      },
+      users :[] ,
       stocks: {},
       news: [],
       open: false,
       //new Set acts like an array
-      names: new Set(["AAPL", "TSLA", "MSFT"]),
+      names: {},
       currentTicker:""
     }
     
@@ -37,6 +39,7 @@ class App extends Component {
   }
 
   componentWillMount() {
+    let symObj = {}
     fetch(`https://query2.finance.yahoo.com/v7/finance/options/AAPL`)
       .then(results => {
         return results.json()
@@ -44,6 +47,7 @@ class App extends Component {
         let stocks = data.optionChain.result[0].quote
         this.setState({stocks: stocks});
         })
+
     fetch(`http://finance.yahoo.com/rss/headline?s=AAPL`)
       .then(results => {
         return results.text()
@@ -51,7 +55,37 @@ class App extends Component {
          let news = this.parseXml(data).rss.channel.item
         this.setState({news: news});
       })
-  }
+
+      fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true&lang=en-CA&region=CA&modules=defaultKeyStatistics,financialData,calendarEvents`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        console.log(data)
+      })
+
+      fetch(`http://localhost:3002/users`)
+       .then(results => {
+        return results.json()
+      }).then(data => {
+        let users = data
+        this.setState({users: users})
+        //console.log(this.state, users)
+        this.state.users.map((user) => {
+          //console.log(user)
+          fetch(`http://localhost:3002/symbols/${user.id}`)
+            .then(results => {
+              return results.json()
+          }).then(data => {
+            //console.log(data)
+            symObj[user.id.toString()] = {symbol: data.map((obj) => {
+              return obj.symbol
+            })}
+            this.setState({names: symObj});
+            //console.log(this.state)
+          })
+        })
+      })
+    }
 
   componentDidMount() {
     this.websocket = new WebSocket("ws://localhost:3001");
@@ -121,7 +155,7 @@ class App extends Component {
     // let updatedScope = this.state.names.filter((item) => { 
     //     return item != name 
     //   })
-    this.state.names.delete(name)
+    this.state.names[this.state.currentUser.id].delete(name)
     this.setState({
       names: this.state.names
     })
@@ -168,6 +202,15 @@ class App extends Component {
           this.prevState({ news: news});
         }
       })
+
+      fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${this.state.currentTicker}?formatted=true&lang=en-CA&region=CA&modules=defaultKeyStatistics,financialData,calendarEvents`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        let stats = data
+        console.log(stats)
+      })
+
       event.preventDefault();
     }
   }
@@ -234,19 +277,25 @@ class App extends Component {
 }
 
   render() {
-    let news = this.state.news.map((item) => {
-      return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
+    let news = this.state.news.map((item, index) => {
+      return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
+    let currentUserId = this.state.currentUser.id;
+    //console.log(this.state)
+    //console.log(this.state.names[currentUserId] && this.state.names[currentUserId][`symbol`])
+    let symbols = this.state.names[currentUserId] && this.state.names[currentUserId][`symbol`]
 
-    let names = [...this.state.names].map((name) => {
-      return <MenuItem onClick={ 
-        (event) => this.handleClick(name) 
-      } >
-      {name}
-      <IconButton tooltip="SVG Icon" >
-        <ContentRemove color={blue500} onClick={ (event) => this.handleRemove(name) }/>
-        </IconButton>
-        </MenuItem>
+    let names = symbols && symbols.map((name, index) => {
+          return (
+            <MenuItem key={index} onClick={ 
+              (event) => this.handleClick(name) 
+            } >
+              {name}
+              <IconButton tooltip="SVG Icon" >
+                  <ContentRemove color={blue500} onClick={ (event) => this.handleRemove(name) }/>
+              </IconButton>
+            </MenuItem>
+          )
     });
 
     let stocks = this.state.stocks
