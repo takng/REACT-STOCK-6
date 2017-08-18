@@ -139,7 +139,6 @@ class App extends Component {
   handleOnChange = (event) => {
     this.setState({wrongInput: false})
     this.setState({currentTicker: event.target.value.toUpperCase()});
-
   }
   
   searchTicker(event) {
@@ -147,8 +146,7 @@ class App extends Component {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
       .then(results => {
         if (results.status === 404) {
-          this.setState({ wrongInput: true })
-          this.setState({currentTicker: ""})
+          this.setState({ currentTicker: '', wrongInput: true })
         }
         else return results.json()
       }).then(data => {
@@ -163,7 +161,12 @@ class App extends Component {
         return results.text()
       }).then(data => {
          let news = this.parseXml(data).rss.channel.item
-        this.setState({news: news});
+         if(news) {
+          this.setState({news: news});
+         }
+        else {
+          this.prevState({ news: news});
+        }
       })
       event.preventDefault();
     }
