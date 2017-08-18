@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ChatBar     from './ChatBar.jsx';
-import MessageList from './MessageList.jsx';
 import Fetch from 'react-fetch';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -13,6 +11,8 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {red500} from 'material-ui/styles/colors';
+import LeftHalf from './LeftHalf'
+import RightHalf from './RightHalf'
 
 class App extends Component {
   constructor(props) {
@@ -145,7 +145,7 @@ class App extends Component {
     if(event.key === "Enter")  {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
       .then(results => {
-        if (results.status === 404) this.setState({ wrongInput: true })
+        if (results.status === 404) this.setState({ wrongInput: true , currentTicker: ''})
         else return results.json()
       }).then(data => {
         let stocks = data.optionChain.result[0].quote
@@ -284,61 +284,11 @@ class App extends Component {
               </form>
               <div><br/></div>
               <section className="container">
-                <div className="left-half">
-                  <article>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>Symbol</th>
-                          <th>Price</th>
-                          <th>Open</th>
-                          <th>High</th>
-                          <th>Low</th>
-                          <th>52 Week High</th>
-                          <th>52 Week Low</th>
-                          <th>Volume</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>{stocks.longName}</td>
-                          <td>{stocks.symbol}</td>
-                          <td>{stocks.regularMarketPrice}</td>
-                          <td>{stocks.regularMarketOpen}</td>
-                          <td>{stocks.regularMarketDayHigh}</td>
-                          <td>{stocks.regularMarketDayLow}</td>
-                          <td>{stocks.fiftyTwoWeekHigh}</td>
-                          <td>{stocks.fiftyTwoWeekLow}</td>
-                          <td>{stocks.regularMarketVolume}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                     <div><br/></div>
-                    <div>
-                      <RaisedButton
-                        label="Add Stock"
-                        labelPosition="before"
-                        primary={true}
-                        icon={<ContentAdd/>}
-                        onClick= {this.handleAdd}
-                      />
-                    </div>
-                  </article>
-                </div>
-                <div className="right-half">
-                  <article>
-                  <h1>Related News</h1>
-                  <ul>{news}</ul>
-                  </article>
-                </div>
+                <LeftHalf stocks={stocks} handleAdd={this.handleAdd}/>
+                <RightHalf news={news} />
               </section>
             <div><br/></div>
-            <MessageList messages={this.state.messages}/>
-            <ChatBar
-              currentUser={this.state.currentUser}
-              onMessageSend={this.sendMessage}
-             />
+           <div className="chatbar"></div>
           </div>
           </MuiThemeProvider>
         );
@@ -365,56 +315,11 @@ class App extends Component {
           <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
            <div><br/></div>
            <section className="container">
-                <div className="left-half">
-                  <article>
-                  <table>
-              <thead>
-              <h1 className="stocks">All you need to know about stocks</h1>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-               </table>
-                 <div>
-                      <RaisedButton
-                        label="Add Stock"
-                        labelPosition="before"
-                        primary={true}
-                        icon={<ContentAdd/>}
-                      />
-                    </div>
-                  </article>
-                </div>
-                <div className="right-half">
-                  <article>
-                  <h1 className="new">The lastest News Updates</h1>
-                    <ul>{news}</ul>
-                  </article>
-                </div>
+                <LeftHalf stocks={stocks} handleAdd={this.handleAdd}/>
+                <RightHalf news={news} /> 
               </section>
             <div><br/></div>
-            <MessageList messages={this.state.messages}/>
-            <ChatBar
-              currentUser={this.state.currentUser}
-              onMessageSend={this.sendMessage}
-             />
+            <div className="chatbar"></div>
           </div>
           </MuiThemeProvider>
         )
