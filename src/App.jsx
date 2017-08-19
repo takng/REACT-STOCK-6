@@ -171,44 +171,20 @@ class App extends Component {
   handleAdd() {
     // if currentTicker is false for example empty is false it should not do anything
     let symObj = {}
-     // this.state.names.id.symbol.map((name) => {
-     //  if((currentTicker == name) || (!this.state.currentTicker)){
-     //    return this.setState({currentTicker: '', names: this.state.names});
-     //  }
-     //  else {
-     //    fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
-     //      method: 'POST'
-     //    })
-     //    .then(results => {
-     //      return results.json()
-     //    })
-     //    fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
-     //      .then(results => {
-     //        return results.json()
-     //      }).then(data => {
-     //        //console.log(data)
-     //        symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
-     //          return obj.symbol
-     //        })}
-     //        this.setState({names: symObj});
-     //        console.log(this.state)
-     //      })
-     //    }
-     //  });
-    // let local_userid = this.state.currentUser.id
-    // let local_currentTicker = this.state.currentTicker
-    // const formData = new FormData();
-    // formData.append('user_id', local_userid);
-    // formData.append('symbol', local_currentTicker);
-    fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
-      method: 'POST'
-    })
-        .then(results => {
-          return results.json()
+    if(this.state.names[this.state.currentUser.id].symbol.includes(this.state.currentTicker)){
+
+      return this.setState({currentTicker: '', names: this.state.names});
+    } else {
+      fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
+        method: 'POST'
       })
-      fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
-            .then(results => {
-              return results.json()
+      .then(results => {
+        return results.json()
+      }).then(resultsBody => {
+        // wait 
+        fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+          .then(results => {
+            return results.json()
           }).then(data => {
             //console.log(data)
             symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
@@ -217,13 +193,38 @@ class App extends Component {
             this.setState({names: symObj});
             console.log(this.state)
           })
+      })
+    }  
+  }
+
+    // let local_userid = this.state.currentUser.id
+    // let local_currentTicker = this.state.currentTicker
+    // const formData = new FormData();
+    // formData.append('user_id', local_userid);
+    // formData.append('symbol', local_currentTicker);
+    // fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
+    //   method: 'POST'
+    // })
+    //     .then(results => {
+    //       return results.json()
+    //   })
+    //   fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+    //         .then(results => {
+    //           return results.json()
+    //       }).then(data => {
+    //         //console.log(data)
+    //         symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+    //           return obj.symbol
+    //         })}
+    //         this.setState({names: symObj});
+    //         console.log(this.state)
+    //       })
 
       // if (!this.state.currentTicker) return
       // //so this adds currentTicker to the state.names and then set the state 
       // this.state.names.add(this.state.currentTicker)
       // this.setState({currentTicker: '', names: this.state.names});
-    
-  }
+ 
 
   handleOnChange = (event) => {
     this.setState({wrongInput: false})
