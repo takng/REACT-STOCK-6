@@ -75,7 +75,8 @@ function renderHelper(req, res) {
   })
 }
 
-app.delete("/symbol/:user_id/:symbol", (req, res) => {
+//app.delete("/symbol/:user_id/:symbol", (req, res) => {
+app.post("/symbol/:user_id/:symbol", (req, res) => {
   knex("user_symbols")
     .where({
       user_id: req.params.user_id,
