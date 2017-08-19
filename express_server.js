@@ -31,6 +31,9 @@ app.use(bodyParser.urlencoded({ extended: true}))
 // app.use("/styles")
 app.use(express.static("public"))
 //app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js")) // redirect bootstrap JS
+
+app.use(require("body-parser").urlencoded({ extended: true}))
+
 app.use(require("express-session")({ secret: "moist", resave: false, saveUninitialized: false}))
 
 // Mount all resource routes
@@ -63,7 +66,6 @@ function renderHelper(req, res) {
     }
   }
 
-  // get favourites
   knex("user_symbols")
   .where(whereClause)
   .select("symbol")
@@ -73,7 +75,34 @@ function renderHelper(req, res) {
   })
 }
 
-// Gets a contribution by user
+app.delete("/symbol/:user_id/:symbol", (req, res) => {
+  knex("user_symbols")
+    .where({
+      user_id: req.params.user_id,
+      symbol: req.params.symbol
+    })
+    .del()
+    .then(() => {
+    })
+})
+
+app.post("/user_symbol", (req, res)=>{
+console.log (req.body.user_id)
+console.log (req.body.symbol)
+
+  knex("user_symbols")
+    .insert(
+    {
+     user_id      : req.body.user_id,
+     symbol       : req.body.symbol,
+     favorite     : 1
+    })
+    .returning("id")
+    .then((id) => {
+      res.send(id)
+    })
+})
+
 app.get("/symbols/:user_id", (req, res) => {
   let arr = [];
   knex("users")
@@ -121,6 +150,9 @@ app.get("/", (req, res) => {
 // Register
 app.post("/register",
   (req, res) => {
+console.log (req.body.username)
+console.log (req.body.email)
+console.log (req.body.password)
     knex("users")
     .count("name")
     .where("name", req.body.username)
@@ -130,13 +162,16 @@ app.post("/register",
         .insert({
           name: req.body.username,
           email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+          password: req.body.password
         })
         .returning("id")
-        .then((results) => {
+        .then((id) => {
+          res.send(id)
+        })
+    //    .then((results) => {
           // Attempt to login
           res.redirect(307, '/login')
-        })
+     //   })
       }
     })
   })
