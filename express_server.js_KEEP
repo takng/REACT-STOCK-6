@@ -111,13 +111,13 @@ app.get("/symbols/:user_id", (req, res) => {
   .andWhere("favorite", true)
   .select("symbol")
   .then((results) => {
-    results.map(arr => Object.values(arr));
-    res.json(results)
-//    results = results.map(function(o){
-//      for(let i in o){
-//         arr.push(o[i])
-//      }
-//    });
+    //results.map(arr => Object.values(arr));
+    // res.json(results)
+    results = results.map(function(o){
+      for(let i in o){
+         arr.push(o[i])
+      }
+    });
     res.json(arr)
   })
   .catch(function(error) {
@@ -135,36 +135,6 @@ app.get("/users", (req, res) => {
     console.log(error)
   })
 })
-
-/*
-app.get("/users", (req, res) => {
-  knex("users")
-  .then((results) => {
-    let users = results
-    results.forEach(function(user) {
-      knex('users')
-      .join("user_symbols", "users.id", "=", "user_symbols.user_id")
-      .where({user_id: user.id})
-      .andWhere("favorite", true)
-      .select("symbol")
-      .then((results) => {
-        users = users.map((u) => {
-          if (u.id == user.id) {
-            u.symbols = results
-          }
-          return u
-        })
-      }).then(() => {
-        res.json(users)
-      })
-    })
-    // res.json(results)
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-})
-*/
 
 // Home page
 app.get("/", (req, res) => {
