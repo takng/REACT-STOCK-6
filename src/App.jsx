@@ -1,54 +1,45 @@
-import React, {Component} from 'react';
-import ChatBar     from './ChatBar.jsx';
-import MessageList from './MessageList.jsx';
 import Fetch from 'react-fetch';
+import React, {Component} from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import {blue500} from 'material-ui/styles/colors';
+import {red500} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import {red500} from 'material-ui/styles/colors';
+import RightHalf from './RightHalf';
+import LeftHalf from './LeftHalf';
 
-
-
-
-
-
-// function searchingFor(term) {
-//   return function(x) {
-//     return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
-//   }
-// }
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser : { name: 'Anonymous' },
-      messages    : [],
-      userCount: 0,
+      currentUser: {
+        id: 1
+      },
+      users :[] ,
       stocks: {},
       news: [],
       open: false,
-      names: ["AAPL", "TSLA", "MSFT"],
+      //new Set acts like an array
+      names: {},
       currentTicker:""
     }
-    //this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+    
     this.searchHandler = this.searchHandler.bind(this);
     this.searchTicker = this.searchTicker.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
-    
-
   }
 
   componentWillMount() {
+    let symObj = {}
     fetch(`https://query2.finance.yahoo.com/v7/finance/options/AAPL`)
       .then(results => {
         return results.json()
@@ -57,14 +48,34 @@ class App extends Component {
         this.setState({stocks: stocks});
         })
 
-        fetch(`http://finance.yahoo.com/rss/headline?s=AAPL`)
+    fetch(`http://finance.yahoo.com/rss/headline?s=AAPL`)
       .then(results => {
         return results.text()
       }).then(data => {
          let news = this.parseXml(data).rss.channel.item
         this.setState({news: news});
       })
-  }
+
+      // fetch(`http://localhost:3002/users`)
+      //  .then(results => {
+      //   return results.json()
+      // }).then(data => {
+      //   let users = data
+      //   //console.log(this.state, users)
+        // this.state.users.map((user) => {
+          fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+            .then(results => {
+              return results.json()
+          }).then(data => {
+            //console.log(data)
+            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+              return obj.symbol
+            })}
+            this.setState({names: symObj});
+            console.log(this.state)
+          })
+      
+    }
 
   componentDidMount() {
     this.websocket = new WebSocket("ws://localhost:3001");
@@ -91,7 +102,6 @@ class App extends Component {
   sendMessage = (messageEvent) => {
     const {name, message} = messageEvent;
     const newMessage = {type: "incomingMessage", username: name, content: message};
-
     this.websocket.send(JSON.stringify(newMessage));
     this.setName(name);
   }
@@ -132,35 +142,49 @@ class App extends Component {
   }
 
   handleRemove(name) {
-    let updatedScope = this.state.names.filter((item) => { 
-        return item != name 
+    // let updatedScope = this.state.names.filter((item) => { 
+    //     return item != name 
+    //   })
+    fetch(`http://localhost:3002/symbol/${this.state.currentUser.id}/${name}`, { 
+      method: 'delete'
+    })
+        .then(results => {
+          return results.json()
       })
+      
+    // this.state.names[this.state.currentUser.id].delete(name)
     this.setState({
-      names: updatedScope
+      names: this.state.names
     })
   }
 
   handleAdd() {
-    console.log(this.state.currentTicker)
-    let newScope = this.state.names.concat(this.state.currentTicker)
-    this.setState({names:newScope})
+    // if currentTicker is false for example empty is false it should not do anything
+      if (!this.state.currentTicker) return
+      //so this adds currentTicker to the state.names and then set the state 
+      this.state.names.add(this.state.currentTicker)
+      this.setState({currentTicker: '', names: this.state.names});
+    
   }
 
   handleOnChange = (event) => {
+    this.setState({wrongInput: false})
     this.setState({currentTicker: event.target.value.toUpperCase()});
   }
   
   searchTicker(event) {
-    if(event.key === "Enter") {
+    if(event.key === "Enter")  {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
       .then(results => {
-        return results.json()
+        if (results.status === 404) {
+          this.setState({ currentTicker: '', wrongInput: true })
+        }
+        else return results.json()
       }).then(data => {
         let stocks = data.optionChain.result[0].quote
         this.setState({
           stocks: stocks,
-        });
-        console.log(this.state)
+        })
       })
 
       fetch(`http://finance.yahoo.com/rss/headline?s=${this.state.currentTicker}`)
@@ -168,8 +192,22 @@ class App extends Component {
         return results.text()
       }).then(data => {
          let news = this.parseXml(data).rss.channel.item
-        this.setState({news: news});
+         if(news) {
+          this.setState({news: news});
+         }
+        else {
+          this.prevState({ news: news});
+        }
       })
+
+      fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${this.state.currentTicker}?formatted=true&lang=en-CA&region=CA&modules=defaultKeyStatistics,financialData,calendarEvents`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        let stats = data
+        console.log(stats)
+      })
+
       event.preventDefault();
     }
   }
@@ -180,20 +218,19 @@ class App extends Component {
     var dom = null;
     if (window.DOMParser){
         dom = (new DOMParser()).parseFromString(xml, "text/xml");
-    } else if (window.ActiveXObject) {
+    }else if (window.ActiveXObject) {
         dom = new ActiveXObject('Microsoft.XMLDOM');
         dom.async = false;
         if (!dom.loadXML(xml)) {
             throw dom.parseError.reason + " " + dom.parseError.srcText;
         }
-    } else {
+    }else {
         throw "cannot parse xml string!";
     }
 
     function isArray(o) {
         return Object.prototype.toString.apply(o) === '[object Array]';
     }
-
     function parseNode(xmlNode, result) {
         if (xmlNode.nodeName == "#text") {
             var v = xmlNode.nodeValue;
@@ -202,7 +239,6 @@ class App extends Component {
             }
             return;
         }
-
         var jsonNode = {};
         var existing = result[xmlNode.nodeName];
         if(existing) {
@@ -218,7 +254,6 @@ class App extends Component {
                 result[xmlNode.nodeName] = jsonNode;
             }
         }
-
         if(xmlNode.attributes) {
             var length = xmlNode.attributes.length;
             for(var i = 0; i < length; i++) {
@@ -226,44 +261,40 @@ class App extends Component {
                 jsonNode[attribute.nodeName] = attribute.nodeValue;
             }
         }
-
         var length = xmlNode.childNodes.length;
         for(var i = 0; i < length; i++) {
             parseNode(xmlNode.childNodes[i], jsonNode);
         }
     }
-
     var result = {};
     if(dom.childNodes.length) {
         parseNode(dom.childNodes[0], result);
     }
-
     return result;
 }
 
-// onSetSidebarOpen = (open)  => {
-//     this.setState({sidebarOpen: open});
-//   }
-
   render() {
-    //var sidebarContent = <b>Sidebar content</b>;
-    const style = {
-      marginRight: 20,
-    };
-    let news = this.state.news.map((item) => {
-      return <div><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
+    let news = this.state.news.map((item, index) => {
+      return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
+    });
+    let currentUserId = this.state.currentUser.id;
+    //console.log(this.state)
+    //console.log(this.state.names[currentUserId] && this.state.names[currentUserId][`symbol`])
+    let symbols = this.state.names[currentUserId] && this.state.names[currentUserId][`symbol`]
+
+    let names = symbols && symbols.map((name, index) => {
+          return (
+            <MenuItem key={index} onClick={ 
+              (event) => this.handleClick(name) 
+            } >
+              {name}
+              <IconButton tooltip="SVG Icon" >
+                  <ContentRemove color={blue500} onClick={ (event) => this.handleRemove(name) }/>
+              </IconButton>
+            </MenuItem>
+          )
     });
 
-    let names = this.state.names.map((name) => {
-      return <MenuItem onClick={ 
-        (event) => this.handleClick(name) 
-      }>
-      {name}
-      <IconButton tooltip="SVG Icon" >
-        <ContentRemove color={blue500} onClick={ (event) => this.handleRemove(name) }/>
-        </IconButton>
-        </MenuItem>
-    });
     let stocks = this.state.stocks
     if (Object.keys(stocks).length > 0) {
         return (
@@ -275,79 +306,46 @@ class App extends Component {
               </nav>
               <div>
                 <RaisedButton
-                  label="Toggle Drawer"
+                  label="WatchList"
                   onClick={this.handleToggle}
                 />
                 <div><br/></div>
-                <Drawer className="drawer" open={this.state.open}>
+                <Drawer open={this.state.open}>
                 <div><br/></div>
-                <h1>Your WatchList</h1>
+                <h1><b>Your WatchList</b></h1>
                   {names}
                 </Drawer>
               </div>
               <form>
-              <input onKeyPress={this.searchTicker} onChange={this.handleOnChange} value={this.state.currentTicker} type="text" placeholder="Enter a Ticker"/>
-              <IconButton tooltip="SVG Icon" >
-                  <ContentAdd color={red500} onClick= {this.handleAdd}/>
-                </IconButton>
+              <input 
+                onKeyPress={this.searchTicker} 
+                onChange={this.handleOnChange} 
+                value={this.state.currentTicker} 
+                type="text" 
+                placeholder="Enter a Ticker"
+                // style={{
+                //   ...(this.state.wrongInput ? 
+                //     {
+                //       borderColor: '#ff3667',
+                //       outline: 0,
+                //       boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6)'
+                //     }
+                //     : {})
+                // }}
+              />
               </form>
+              {this.state.wrongInput && <span style={{ color: 'tomato' }}>symbol doesn't exist</span>}
               <div><br/></div>
               <section className="container">
-              <style>{`
-                 table{
-                  border:1px solid black;
-                  }
-                  `}</style>
-                <div className="left-half">
-                  <article>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>Symbol</th>
-                          <th>Price</th>
-                          <th>Open</th>
-                          <th>High</th>
-                          <th>Low</th>
-                          <th>52 Week High</th>
-                          <th>52 Week Low</th>
-                          <th>Volume</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>{stocks.longName}</td>
-                          <td>{stocks.symbol}</td>
-                          <td>{stocks.regularMarketPrice}</td>
-                          <td>{stocks.regularMarketOpen}</td>
-                          <td>{stocks.regularMarketDayHigh}</td>
-                          <td>{stocks.regularMarketDayLow}</td>
-                          <td>{stocks.fiftyTwoWeekHigh}</td>
-                          <td>{stocks.fiftyTwoWeekLow}</td>
-                          <td>{stocks.regularMarketVolume}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </article>
-                </div>
-                <div className="right-half">
-                  <article>
-                  <h1>Related News</h1>
-                  <ul>{news}</ul>
-                  </article>
-                </div>
+                <LeftHalf stocks={stocks} handleAdd={this.handleAdd}/>
+                <RightHalf news={news} />
               </section>
             <div><br/></div>
-            <MessageList messages={this.state.messages}/>
-            <ChatBar
-              currentUser={this.state.currentUser}
-              onMessageSend={this.sendMessage}
-             />
+           <div className="chatbar"></div>
           </div>
           </MuiThemeProvider>
         );
-      }
-      else{
+      }else {
         return (
           <MuiThemeProvider>
           <div className = "container">
@@ -357,7 +355,7 @@ class App extends Component {
             </nav>
              <div>
             <RaisedButton
-              label="Toggle Drawer"
+              label="WatchList"
               onClick={this.handleToggle}
             />
             <div><br/></div>
@@ -370,68 +368,17 @@ class App extends Component {
           <input onKeyPress={this.searchTicker} type="text" placeholder="Enter a Ticker"/>
            <div><br/></div>
            <section className="container">
-           <style>{`
-                 table{
-                  border:1px solid black;
-                  }
-                  `}</style>
-                <div className="left-half">
-                  <article>
-                  <table>
-              <thead>
-              <h1 className="stocks">All you need to know about stocks</h1>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-               </table>
-                  </article>
-                </div>
-                <div className="right-half">
-                  <article>
-                  <h1 className="new">The lastest News Updates</h1>
-                    <ul>{news}</ul>
-                  </article>
-                </div>
+                <LeftHalf stocks={stocks} handleAdd={this.handleAdd}/>
+                <RightHalf news={news} /> 
               </section>
             <div><br/></div>
-            <MessageList messages={this.state.messages}/>
-            <ChatBar
-              currentUser={this.state.currentUser}
-              onMessageSend={this.sendMessage}
-             />
+            <div className="chatbar"></div>
           </div>
           </MuiThemeProvider>
         )
       }
-      }
-
-
-      // search(query){
-      //   var searchRegEx = new RegExp(`${query}`, 'i')
-      //   var articles = JSON.parse(this.state.articles);
-      //   var search = articles.filter(function(article){
-      //       return searchRegEx.test(article.title);
-      //   });
-      // }
-
     }
+
+  }
 
     export default App;
