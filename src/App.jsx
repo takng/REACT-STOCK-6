@@ -20,7 +20,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {
-        id: 1
+        id: 2
       },
       users :[] ,
       stocks: {},
@@ -145,25 +145,59 @@ class App extends Component {
     // let updatedScope = this.state.names.filter((item) => { 
     //     return item != name 
     //   })
+    let symObj = {}
     fetch(`http://localhost:3002/symbol/${this.state.currentUser.id}/${name}`, { 
-      method: 'delete'
+      method: 'POST'
     })
         .then(results => {
           return results.json()
       })
-      
+      fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+            .then(results => {
+              return results.json()
+          }).then(data => {
+            //console.log(data)
+            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+              return obj.symbol
+            })}
+            this.setState({names: symObj});
+            console.log(this.state)
+          })
+
     // this.state.names[this.state.currentUser.id].delete(name)
-    this.setState({
-      names: this.state.names
-    })
+    
   }
 
   handleAdd() {
     // if currentTicker is false for example empty is false it should not do anything
-      if (!this.state.currentTicker) return
-      //so this adds currentTicker to the state.names and then set the state 
-      this.state.names.add(this.state.currentTicker)
-      this.setState({currentTicker: '', names: this.state.names});
+    let symObj = {}
+    // let local_userid = this.state.currentUser.id
+    // let local_currentTicker = this.state.currentTicker
+    // const formData = new FormData();
+    // formData.append('user_id', local_userid);
+    // formData.append('symbol', local_currentTicker);
+    fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
+      method: 'POST'
+    })
+        .then(results => {
+          return results.json()
+      })
+      fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+            .then(results => {
+              return results.json()
+          }).then(data => {
+            //console.log(data)
+            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+              return obj.symbol
+            })}
+            this.setState({names: symObj});
+            console.log(this.state)
+          })
+
+      // if (!this.state.currentTicker) return
+      // //so this adds currentTicker to the state.names and then set the state 
+      // this.state.names.add(this.state.currentTicker)
+      // this.setState({currentTicker: '', names: this.state.names});
     
   }
 
