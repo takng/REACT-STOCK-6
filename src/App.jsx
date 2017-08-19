@@ -56,35 +56,25 @@ class App extends Component {
         this.setState({news: news});
       })
 
-      fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true&lang=en-CA&region=CA&modules=defaultKeyStatistics,financialData,calendarEvents`)
-      .then(results => {
-        return results.json()
-      }).then(data => {
-        console.log(data)
-      })
-
-      fetch(`http://localhost:3002/users`)
-       .then(results => {
-        return results.json()
-      }).then(data => {
-        let users = data
-        this.setState({users: users})
-        //console.log(this.state, users)
-        this.state.users.map((user) => {
-          //console.log(user)
-          fetch(`http://localhost:3002/symbols/${user.id}`)
+      // fetch(`http://localhost:3002/users`)
+      //  .then(results => {
+      //   return results.json()
+      // }).then(data => {
+      //   let users = data
+      //   //console.log(this.state, users)
+        // this.state.users.map((user) => {
+          fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
             .then(results => {
               return results.json()
           }).then(data => {
             //console.log(data)
-            symObj[user.id.toString()] = {symbol: data.map((obj) => {
+            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
               return obj.symbol
             })}
             this.setState({names: symObj});
-            //console.log(this.state)
+            console.log(this.state)
           })
-        })
-      })
+      
     }
 
   componentDidMount() {
@@ -155,7 +145,14 @@ class App extends Component {
     // let updatedScope = this.state.names.filter((item) => { 
     //     return item != name 
     //   })
-    this.state.names[this.state.currentUser.id].delete(name)
+    fetch(`http://localhost:3002/symbol/${this.state.currentUser.id}/${name}`, { 
+      method: 'delete'
+    })
+        .then(results => {
+          return results.json()
+      })
+      
+    // this.state.names[this.state.currentUser.id].delete(name)
     this.setState({
       names: this.state.names
     })
