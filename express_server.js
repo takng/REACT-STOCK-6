@@ -181,31 +181,37 @@ app.get("/", (req, res) => {
   //  failureRedirect: "/"
   //}))
 
+app.post("/login/:name/:password", (req, res) => {
+  knex("users")
+  .where({name: req.params.name})
+  .andWhere({password: req.params.password})
+  .select("id")
+  .then((results) => {
+    res.json(results)
+  })
+  .catch(function(error) {
+    console.log(error)
+  })
+})
+
 // Register
-app.post("/register",
+app.post("/register/:name/:email/:password",
   (req, res) => {
-console.log (req.body.username)
-console.log (req.body.email)
-console.log (req.body.password)
     knex("users")
     .count("name")
-    .where("name", req.body.username)
+    .where("name", req.params.name)
     .then((results) => {
       if(results[0].count == 0){
         knex("users")
         .insert({
-          name: req.body.username,
-          email: req.body.email,
-          password: req.body.password
+          name: req.params.name,
+          email: req.params.email,
+          password: req.params.password
         })
         .returning("id")
         .then((id) => {
           res.send(id)
         })
-    //    .then((results) => {
-          // Attempt to login
-          res.redirect(307, '/login')
-     //   })
       }
     })
   })
