@@ -11,7 +11,7 @@ body {
 }
 
 .chatbar {
-  background: blue;
+  background: black;
   border-top: 1px solid black;
   bottom: 0;
   display: flex;
@@ -32,6 +32,11 @@ body {
 
 .chatbar-message {
   flex: 7;
+
+.drawer {
+  background: darkgray;
+}
+
 }
 
 .chatbar-username {
@@ -65,7 +70,7 @@ body {
 }
 
 .navbar {
-  background: blue;
+  background: black;
   border-bottom: 1px solid black;
   height: 50px;
   left: 0;
@@ -75,8 +80,11 @@ body {
   top: 0;
 }
 
+
+
+
 .navbar-brand {
-  color: inherit;
+  color: white ;
   display: block;
   float: left;
   font-weight: 700;
@@ -84,16 +92,13 @@ body {
   height: 50px;
   line-height: 50px;
   padding: 0 10px;
-  text-decoration: none;
+  text-decoration: none
+  ;
+  background:black {
+
+}
 }
 
-.navbar-user-count {
-  float: right;
-  font-size: 15px;
-  line-height: 50px;
-  padding: 0 10px;
-  text-decoration: none;
-}
 
 html, body, section {
   height: 100%;
@@ -116,7 +121,9 @@ h1 {
   font-size: 0.9em;
   margin: 0 0 0.75rem 0;
 }
-
+nav {
+  background-color: black;
+}
 /* Pattern styles */
 .container {
   display: flex;
@@ -153,6 +160,18 @@ th {
   border:1px solid grey;
 }
 
+a {
+    color: red;
+}
+
 table {
   border:1px solid black;
 }
+label.user {
+  padding-right: 10px;
+}
+
+
+
+
+

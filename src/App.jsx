@@ -15,14 +15,14 @@ import RightHalf from './RightHalf';
 import LeftHalf from './LeftHalf';
 
 
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {
-        id: 2
-      },
-      users :[] ,
+      currentUserId: 0,
+      userName : "" ,
+      userPassword: "",
       stocks: {},
       news: [],
       open: false,
@@ -36,6 +36,13 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.saveUserName = this.saveUserName.bind(this);
+    this.saveUserPassword = this.saveUserPassword.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+  
+  
   }
 
   componentWillMount() {
@@ -63,12 +70,12 @@ class App extends Component {
       //   let users = data
       //   //console.log(this.state, users)
         // this.state.users.map((user) => {
-          fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+          fetch(`http://localhost:3002/symbols/${this.state.currentUserId}`)
             .then(results => {
               return results.json()
           }).then(data => {
             //console.log(data)
-            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+            symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
               return obj.symbol
             })}
             this.setState({names: symObj});
@@ -122,6 +129,8 @@ class App extends Component {
   searchHandler(event) {
     this.setState({term: event.target.value})
   }
+  
+  
 
   handleClick(name) {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${name}`)
@@ -146,18 +155,18 @@ class App extends Component {
     //     return item != name 
     //   })
     let symObj = {}
-    fetch(`http://localhost:3002/symbol/${this.state.currentUser.id}/${name}`, { 
+    fetch(`http://localhost:3002/symbol/${this.state.currentUserId}/${name}`, { 
       method: 'POST'
     })
         .then(results => {
           return results.json()
       })
-      fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+      fetch(`http://localhost:3002/symbols/${this.state.currentUserId}`)
             .then(results => {
               return results.json()
           }).then(data => {
             //console.log(data)
-            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+            symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
               return obj.symbol
             })}
             this.setState({names: symObj});
@@ -171,23 +180,23 @@ class App extends Component {
   handleAdd() {
     // if currentTicker is false for example empty is false it should not do anything
     let symObj = {}
-    if(this.state.names[this.state.currentUser.id].symbol.includes(this.state.currentTicker)){
+    if(this.state.names[this.state.currentUserId].symbol.includes(this.state.currentTicker)){
 
       return this.setState({currentTicker: '', names: this.state.names});
     } else {
-      fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
+      fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUserId}/${this.state.currentTicker}`, { 
         method: 'POST'
       })
       .then(results => {
         return results.json()
       }).then(resultsBody => {
         // wait 
-        fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+        fetch(`http://localhost:3002/symbols/${this.state.currentUserId}`)
           .then(results => {
             return results.json()
           }).then(data => {
             //console.log(data)
-            symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+            symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
               return obj.symbol
             })}
             this.setState({names: symObj});
@@ -230,7 +239,49 @@ class App extends Component {
     this.setState({wrongInput: false})
     this.setState({currentTicker: event.target.value.toUpperCase()});
   }
-  
+
+  handleInputChange = (event) => {
+    this.setState({userName: event.target.value})
+  }
+
+  saveUserName = (event) =>{
+    this.setState({userName: userName})
+  }
+
+  handlePasswordChange = (event) => {
+    this.setState({userPassword: event.target.value})
+  }
+
+  saveUserPassword = (event) =>{
+    this.setState({userPassword: userPassword})
+  }
+
+   handleLogin = (event) => {
+    let symObj = {}
+    let currentUserId = this.state.currentUserId
+     fetch(`http://localhost:3002/login/${this.state.userName}/${this.state.userPassword}`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        console.log(data)
+          this.setState({currentUserId: data[0].id})
+          console.log(this.state)
+          fetch(`http://localhost:3002/symbols/${this.state.currentUserId}`)
+          .then(results => {
+            return results.json()
+          }).then(data => {
+            console.log("TEST MESSAGE")
+            //console.log(data)
+            symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
+              return obj.symbol
+            })}
+            this.setState({names: symObj});
+            console.log(this.state)
+          })
+        })
+        
+    }
+
   searchTicker(event) {
     if(event.key === "Enter")  {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
@@ -270,6 +321,14 @@ class App extends Component {
       event.preventDefault();
     }
   }
+
+// handleInputChange (event) {
+//   let userName = this.state.userName
+//   console.log("username". userName)
+//   this.setState({userName: event.target.value})
+//   console.log("new", userName)
+// }
+
 
   handleToggle = () => this.setState({open: !this.state.open});
 
@@ -333,10 +392,11 @@ class App extends Component {
 }
 
   render() {
+
     let news = this.state.news.map((item, index) => {
       return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
     });
-    let currentUserId = this.state.currentUser.id;
+    let currentUserId = this.state.currentUserId;
     //console.log(this.state)
     //console.log(this.state.names[currentUserId] && this.state.names[currentUserId][`symbol`])
     let symbols = this.state.names[currentUserId] && this.state.names[currentUserId][`symbol`]
@@ -362,20 +422,20 @@ class App extends Component {
               <nav className="navbar">
                 <a href="/" className="navbar-brand">REACT-STOCK</a>
                 <h3 className="navbar-login>"></h3>
-                <label><b>Username</b></label>
-
-               <input type="text" placeholder="Enter Email" name="uname" required/>
-                <label><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" required/>
-
-               <button type="submit">Login</button>
+                <div className="login">
+                <label className= "user" ><b>Username</b></label>
+                <input type="text" onChange={this.handleInputChange} onKeyPress={this.saveUserName} value={this.state.userName} placeholder="Enter User Name" name="uname" required/>
+                <label className = "password"  ><b>Password</b></label>
+                <input type="password" onChange={this.handlePasswordChange} onKeyPress={this.saveUserPassword} value={this.state.userPassword}placeholder="Enter Password" name="psw" required/>
+                <button type="submit" onClick={this.handleLogin}>Login</button>
                 <span className="psw">New User?<a href="#">Register</a></span>
+                </div>
               </nav>
               <div>
                 <RaisedButton
                   label="WatchList"
                   onClick={this.handleToggle}
-                />
+                />  
                 <div><br/></div>
                 <Drawer open={this.state.open}>
                 <div><br/></div>
