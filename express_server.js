@@ -181,7 +181,7 @@ app.get("/", (req, res) => {
   //  failureRedirect: "/"
   //}))
 
-app.post("/login/:name/:password", (req, res) => {
+app.get("/login/:name/:password", (req, res) => {
   knex("users")
   .where({name: req.params.name})
   .andWhere({password: req.params.password})
