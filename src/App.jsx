@@ -171,6 +171,30 @@ class App extends Component {
   handleAdd() {
     // if currentTicker is false for example empty is false it should not do anything
     let symObj = {}
+     // this.state.names.id.symbol.map((name) => {
+     //  if((currentTicker == name) || (!this.state.currentTicker)){
+     //    return this.setState({currentTicker: '', names: this.state.names});
+     //  }
+     //  else {
+     //    fetch(`http://localhost:3002/ins_user_symbol/${this.state.currentUser.id}/${this.state.currentTicker}`, { 
+     //      method: 'POST'
+     //    })
+     //    .then(results => {
+     //      return results.json()
+     //    })
+     //    fetch(`http://localhost:3002/symbols/${this.state.currentUser.id}`)
+     //      .then(results => {
+     //        return results.json()
+     //      }).then(data => {
+     //        //console.log(data)
+     //        symObj[this.state.currentUser.id.toString()] = {symbol: data.map((obj) => {
+     //          return obj.symbol
+     //        })}
+     //        this.setState({names: symObj});
+     //        console.log(this.state)
+     //      })
+     //    }
+     //  });
     // let local_userid = this.state.currentUser.id
     // let local_currentTicker = this.state.currentTicker
     // const formData = new FormData();
@@ -336,7 +360,15 @@ class App extends Component {
             <div className = "container">
               <nav className="navbar">
                 <a href="/" className="navbar-brand">REACT-STOCK</a>
-                <h3 className="navbar-user-count">{this.state.userCount} users online</h3>
+                <h3 className="navbar-login>"></h3>
+                <label><b>Username</b></label>
+
+               <input type="text" placeholder="Enter Email" name="uname" required/>
+                <label><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required/>
+
+               <button type="submit">Login</button>
+                <span className="psw">New User?<a href="#">Register</a></span>
               </nav>
               <div>
                 <RaisedButton
