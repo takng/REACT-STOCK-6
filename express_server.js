@@ -111,7 +111,7 @@ app.get("/symbols/:user_id", (req, res) => {
   .andWhere("favorite", true)
   .select("symbol")
   .then((results) => {
-    results.map(arr => Object.values(arr));
+    //results.map(arr => Object.values(arr));
     res.json(results)
 //    results = results.map(function(o){
 //      for(let i in o){
