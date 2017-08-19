@@ -87,15 +87,18 @@ app.post("/symbol/:user_id/:symbol", (req, res) => {
     })
 })
 
-app.post("/user_symbol", (req, res)=>{
-console.log (req.body.user_id)
-console.log (req.body.symbol)
+// app.post("/user_symbol", (req, res)=>{
+app.post("/ins_user_symbol/:user_id/:symbol", (req, res) => {
+//console.log (req.body.user_id)
+//console.log (req.body.symbol)
 
   knex("user_symbols")
     .insert(
     {
-     user_id      : req.body.user_id,
-     symbol       : req.body.symbol,
+     // user_id      : req.body.user_id,
+     // symbol       : req.body.symbol,
+     user_id      : req.params.user_id,
+     symbol       : req.params.symbol,
      favorite     : 1
     })
     .returning("id")
