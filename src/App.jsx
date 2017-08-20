@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import RightHalf from './RightHalf';
 import LeftHalf from './LeftHalf';
-import { Card, Row, Col } from 'react-materialize';
+import { Button, Card, Row, Col } from 'react-materialize';
 
 
 
@@ -395,7 +395,7 @@ class App extends Component {
   render() {
 
     let news = this.state.news.map((item, index) => {
-      return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>{item.link['#text']}</a><br/><br/></div>
+      return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>Read More </a><br/><br/></div>
     });
     let currentUserId = this.state.currentUserId;
     //console.log(this.state)
