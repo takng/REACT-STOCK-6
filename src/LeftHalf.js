@@ -1,38 +1,161 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { Button, Card, Row, Col } from 'react-materialize';
 
 export default ({ stocks, handleAdd }) =>
 	<div className="left-half">
+  <Col s={6} className='grid-example'>
       <article>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Symbol</th>
-              <th>Price</th>
-              <th>Open</th>
-              <th>High</th>
-              <th>Low</th>
-              <th>52 Week High</th>
-              <th>52 Week Low</th>
-              <th>Volume</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{stocks.longName}</td>
-              <td>{stocks.symbol}</td>
-              <td>{stocks.regularMarketPrice}</td>
-              <td>{stocks.regularMarketOpen}</td>
-              <td>{stocks.regularMarketDayHigh}</td>
-              <td>{stocks.regularMarketDayLow}</td>
-              <td>{stocks.fiftyTwoWeekHigh}</td>
-              <td>{stocks.fiftyTwoWeekLow}</td>
-              <td>{stocks.regularMarketVolume}</td>
-            </tr>
-          </tbody>
-        </table>
+      <table className ="bordered">
+       
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{stocks.longName}</td>
+          </tr>
+          <tr>
+            <td>Symbol</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{stocks.symbol}</td>
+          </tr>
+          <tr>
+           <td>Price</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+           <td>{stocks.regularMarketPrice}</td>
+          </tr>
+          <tr>
+           <td>Open</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+           <td>{stocks.regularMarketOpen}</td>
+          </tr>
+          <tr>
+           <td>High</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+           <td>{stocks.regularMarketDayHigh}</td>
+          </tr>
+          <tr>
+           <td>Low</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{stocks.regularMarketDayLow}</td>
+          </tr>
+          <tr>
+           <td>52 Week High</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+           <td>{stocks.fiftyTwoWeekHigh}</td>
+          </tr>
+          <tr>
+           <td>52 Week Low</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+           <td>{stocks.fiftyTwoWeekLow}</td>
+          </tr>
+          <tr>
+           <td>Volume</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+           <td>{stocks.regularMarketVolume}</td>
+          </tr>
+        </tbody>
+      </table>
          <div><br/></div>
         <div>
           <RaisedButton
@@ -44,4 +167,5 @@ export default ({ stocks, handleAdd }) =>
           />
         </div>
       </article>
+      </Col>
     </div>

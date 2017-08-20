@@ -13,6 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import RightHalf from './RightHalf';
 import LeftHalf from './LeftHalf';
+import { Card, Row, Col } from 'react-materialize';
 
 
 
@@ -421,17 +422,19 @@ class App extends Component {
             <div className = "container">
               <nav className="navbar">
                 <a href="/" className="navbar-brand">REACT-STOCK</a>
+                <div className= "login">
                 <h3 className="navbar-login>"></h3>
-                <div className="login">
                 <label className= "user" ><b>Username</b></label>
                 <input type="text" onChange={this.handleInputChange} onKeyPress={this.saveUserName} value={this.state.userName} placeholder="Enter User Name" name="uname" required/>
                 <label className = "password"  ><b>Password</b></label>
-                <input type="password" onChange={this.handlePasswordChange} onKeyPress={this.saveUserPassword} value={this.state.userPassword}placeholder="Enter Password" name="psw" required/>
+                <input className = "password" type="password" onChange={this.handlePasswordChange} onKeyPress={this.saveUserPassword} value={this.state.userPassword}placeholder="Enter Password" name="psw" required/>
                 <button type="submit" onClick={this.handleLogin}>Login</button>
-                <span className="psw">New User?<a href="#">Register</a></span>
-                </div>
+              </div>
               </nav>
-              <div>
+              <div><br/></div>
+              <div><br/></div>
+              <div><br/></div>
+              <div className = "raised-button">
                 <RaisedButton
                   label="WatchList"
                   onClick={this.handleToggle}
@@ -444,7 +447,7 @@ class App extends Component {
                 </Drawer>
               </div>
               <form>
-              <input 
+              <input className = "ticker"
                 onKeyPress={this.searchTicker} 
                 onChange={this.handleOnChange} 
                 value={this.state.currentTicker} 

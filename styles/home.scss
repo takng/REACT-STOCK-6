@@ -11,7 +11,7 @@ body {
 }
 
 .chatbar {
-  background: black;
+  background: rgba(0, 0, 255, 1);
   border-top: 1px solid black;
   bottom: 0;
   display: flex;
@@ -21,22 +21,8 @@ body {
   right: 0;
 }
 
-.chatbar-message,
-.chatbar-username {
-  display: block;
-  height: 50px;
-  line-height: 50px;
-  margin: 8px;
-  padding: 0 9px;
-}
-
-.chatbar-message {
-  flex: 7;
-
 .drawer {
   background: darkgray;
-}
-
 }
 
 .chatbar-username {
@@ -70,18 +56,15 @@ body {
 }
 
 .navbar {
-  background: black;
+  background: rgba(0, 0, 255, 1);
   border-bottom: 1px solid black;
-  height: 50px;
+  height: 100px;
   left: 0;
   padding: 0 10px;
   position: fixed;
   right: 0;
   top: 0;
 }
-
-
-
 
 .navbar-brand {
   color: white ;
@@ -92,11 +75,8 @@ body {
   height: 50px;
   line-height: 50px;
   padding: 0 10px;
-  text-decoration: none
-  ;
-  background:black {
-
-}
+  text-decoration: none;
+  background: black;
 }
 
 
@@ -122,22 +102,23 @@ h1 {
   margin: 0 0 0.75rem 0;
 }
 nav {
-  background-color: black;
+  background-color: rgba(0, 0, 255, 1);
 }
-/* Pattern styles */
+
 .container {
+
   display: flex;
-  padding-right: 100px;
+  margin: 0 ;
 }
 
 .left-half {
-  background-color: black;
+  background: linear-gradient(to right, rgba(0, 0, 255, 0.5), rgba(0, 0, 255, 1));
   flex: 1;
   padding: 1rem;
 }
 
 .right-half {
-  background-color: black;
+  background: linear-gradient(to right, rgba(0, 0, 255, 0.5), rgba(0, 0, 255, 1));
   flex: 1;
   padding: 1rem;
 }
@@ -145,33 +126,53 @@ nav {
 input {
   width: 150px !important;
 }
-.new{
-font-size: 1.5  em;
-}
-.stocks{
-font-size: 1.5em;
+
+.new {
+  font-size: 1.5  em;
 }
 
-td {
-  border:1px solid grey;
-}
-
-th {
-  border:1px solid grey;
+.stocks {
+  font-size: 1.5em;
 }
 
 a {
-    color: red;
+    color: black;
 }
 
 table {
   border:1px solid black;
 }
+
 label.user {
   padding-right: 10px;
 }
 
+label.password{
+  padding-right: 10px;
+}
 
+button.login-button {
+  padding-left: 50px ;
+  font: none;
+}
 
+div.login {
+  float:right;
+}
+ 
+input.password{
+  padding-right: 10px;
+}
 
+section .container{
+  padding-right: 100px;
+}
 
+a.navbar-brand {
+  background: rgba(0, 0, 255, 1);
+  
+}
+
+input.ticker{
+  
+}
