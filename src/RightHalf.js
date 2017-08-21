@@ -6,7 +6,7 @@ import { Button, Card, Row, Col } from 'react-materialize';
 export default ({news}) =>
 	<div className="right-half">
     <article>
-      <h1>Related News</h1>
+      <h1 className ="news">Related News</h1>
       <ul>{news}</ul>
       </article>
    </div>

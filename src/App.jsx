@@ -18,6 +18,7 @@ import { Button, Card, Row, Col } from 'react-materialize';
 import Modal from'react-modal';
 import FlatButton from 'material-ui/FlatButton';
 
+
 export const grey500 = '#9e9e9e';
 
 const customStyles = {
@@ -35,15 +36,17 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUserId: 3,
+      currentUserId: 0,
       userName : "" ,
       userPassword: "",
+      newUser: "",
+      newPassword:"",
       email: "",
       stocks: {},
       news: [],
       open: false,  
       isActive: false,
-
+      lows: [],
       //new Set acts like an array
       names: {},
       currentTicker:""
@@ -89,6 +92,31 @@ class App extends Component {
       this.setState({names: symObj});
       console.log(this.state)
     })
+
+    fetch(`https://query1.finance.yahoo.com/v8/finance/chart/AAPL?range=max`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        // console.log("this one")
+         // console.log(data)
+        let array = []
+        // for (let i of data.chart.result[0].indicators.quote[0].low) {
+        let timestamps = data.chart.result[0].timestamp;
+        for (let z = 0; z < timestamps.length; z++) {
+          let low = data.chart.result[0].indicators.quote[0].low[z]
+          let a = new String(timestamps[z]) + '000'
+          let y = new Date(parseInt(a))
+          
+          array.push({name: y, uv: low});
+          console.log('parsing return', y, low)
+          // }
+        }
+        console.log('array', array)
+        this.setState({lows: array.splice(-6)}, function() {
+          console.log('lows', this.state.lows)
+        });
+        
+      })
       
     Modal.setAppElement('body');
   }
@@ -107,6 +135,7 @@ class App extends Component {
         }
         else return results.json()
       }).then(data => {
+        console.log(data);
         let stocks = data.optionChain.result[0].quote
         this.setState({
           stocks: stocks,
@@ -123,8 +152,21 @@ class App extends Component {
          }
         else {
           this.prevState({ news: news});
-        }
+        }       
       })
+
+      // fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${this.state.currentTicker}?range=max`)
+      // .then(results => {
+      //   return results.json()
+      // }).then(data => {
+      //   console.log("this one")
+      //   console.log(data)
+      //   let array = []
+      //   for (let i of data.chart.result[0].indicators.quote[0].low) {
+      //     array.push({name: i, uv: i});
+      //   }
+      //   this.setState({lows: array.splice(-10)});
+      //   })
 
       event.preventDefault();
     }
@@ -262,7 +304,7 @@ class App extends Component {
     this.setState({currentTicker: event.target.value.toUpperCase()});
   }
 
-  //----------------------Login/Registration-----------------------------------------------
+  //----------------------Login-----------------------------------------------
 
   handleInputChange = (event) => {
     this.setState({userName: event.target.value})
@@ -278,19 +320,6 @@ class App extends Component {
 
   saveUserPassword = (event) => {
     this.setState({userPassword: userPassword})
-  }
-
-  handleEmailChange =(event) => {
-    this.setState({email: event.target.value})
-  }
-
-  saveEmail = (event) => {
-    this.setState({email: email})
-    console.log(email)
-  }
-
-  handleRegistration = (event) => {
-
   }
 
    handleLogin = (event) => {
@@ -316,10 +345,63 @@ class App extends Component {
             console.log(this.state)
           })
         })
-        
     }
 
-//-----------------------Side Drawer----------------------------------
+//--------------------------Registration--------------------------------
+
+  // handleUserChange = (event) => {
+  //     this.setState({newUser: event.target.value})
+  //   }
+
+  // saveRegisterName = (event) =>{
+  //     this.setState({newUser: newUser})
+  //   }
+
+
+  // handlePasswordRegisterChange = (event) => {
+  //     this.setState({newPassword: event.target.value})
+  //   }
+
+  // savePassword = (event) => {
+  //     this.setState({newPassword: newPassword})
+  //   }
+
+  // handleEmailChange =(event) => {
+  //     this.setState({email: event.target.value})
+  //   }
+
+  // saveEmail = (event) => {
+  //   this.setState({email: email})
+  // }
+
+  // handleRegistration  = (event) => {
+  //   let symObj = {}
+  //   fetch(`http://localhost:3002/register/${this.state.newUser}/${this.state.email}/${this.state.newPassword}`, { 
+  //     method: 'POST'
+  //   })
+  //     .then(results => {
+  //       return results.json()
+  //     }).then(data => {
+  //       console.log(data)
+  //         this.setState({currentUserId: data[0].id})
+  //         console.log(this.state)
+  //         fetch(`http://localhost:3002/symbols/${this.state.currentUserId}`)
+  //         .then(results => {
+  //           return results.json()
+  //         }).then(data => {
+  //           console.log("TEST MESSAGE")
+  //           //console.log(data)
+  //           symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
+  //             return obj.symbol
+  //           })}
+  //           this.setState({names: symObj});
+  //           console.log(this.state)
+  //         })
+  //     })
+  // }
+
+
+//-----------------------Side Drawer------------------------------------
 
   handleToggle = () => this.setState({open: !this.state.open});
 
@@ -388,11 +470,11 @@ class App extends Component {
                 
                   <Modal isOpen ={this.state.isActive} onRequestClose = {this.toggleModal} style={customStyles}>
                     <label className= "user" ><b>Username</b></label>
-                    <input className = "user-reg" type="text" onChange={this.handleInputChange} onKeyPress={this.saveUserName} value={this.state.userName} placeholder="Enter User Name" name="uname" required/><br/>
+                    <input className = "user-reg" type="text" onChange={this.handleUserChange} onKeyPress={this.saveRegisterName} value={this.state.newUser} placeholder="Enter User Name" name="uname" required/><br/>
                     <label className= "email" ><b>Email</b></label>
                     <input className = "email"type="text" onChange={this.handleEmailChange} onKeyPress={this.saveEmail} value={this.state.email} placeholder="Enter Your Email" name="uname" required/><br/>
                     <label className = "password"  ><b>Password</b></label>
-                    <input className = "password-reg" type="password" onChange={this.handlePasswordChange} onKeyPress={this.saveUserPassword} value={this.state.userPassword}placeholder="Enter Password" name="psw" required/><br/>
+                    <input className = "password-reg" type="password" onChange={this.handlePasswordRegisterChange} onKeyPress={this.saveRegisterPassword} value={this.state.newPassword}placeholder="Enter Password" name="psw" required/><br/>
                     <button className = "register-button" type="submit" onClick={this.handleRegistration}>Register</button>
                     <button className = "close" onClick = {this.toggleModal}>Close</button>
                   </Modal> 
@@ -409,7 +491,7 @@ class App extends Component {
               {this.state.wrongInput && <span style={{ color: 'tomato' }}>symbol doesn't exist</span>}
               <div><br/></div>
               <section className="container">
-                <LeftHalf stocks={stocks} handleAdd={this.handleAdd}/>
+                <LeftHalf stocks={stocks} handleAdd={this.handleAdd} lows={this.state.lows}/>
                 <RightHalf news={news} />
               </section>
             <div><br/></div>
