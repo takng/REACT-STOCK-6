@@ -5,7 +5,6 @@ import { Button, Card, Row, Col } from 'react-materialize';
 
 export default ({ stocks, handleAdd }) =>
 	<div className="left-half">
-  <Col s={6} className='grid-example'>
       <article>
       <table className ="bordered">
        
@@ -157,15 +156,13 @@ export default ({ stocks, handleAdd }) =>
         </tbody>
       </table>
          <div><br/></div>
-        <div>
+        <div className = "button">
           <RaisedButton
             label="Add Stock"
             labelPosition="before"
-            primary={true}
             icon={<ContentAdd/>}
             onClick= {handleAdd}
           />
         </div>
       </article>
-      </Col>
     </div>

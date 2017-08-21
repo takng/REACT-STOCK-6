@@ -39,26 +39,13 @@ body {
   padding: 8px 20px;
 }
 
-.message-content,
-.message-username {
-  overflow: hidden;
-  margin: 8px;
-  padding: 0 10px;
-}
 
-.message-content {
-  flex: 7;
-}
 
-.message-username {
-  flex: 3;
-  font-weight: 900;
-}
 
 .navbar {
   background: rgba(168,168,168,1);
   border-bottom: 1px solid black;
-  height: 100px;
+  height: 120px;
   left: 0;
   padding: 0 10px;
   position: fixed;
@@ -67,7 +54,7 @@ body {
 }
 
 .navbar-brand {
-  color: white ;
+  color: black ;
   display: block;
   float: left;
   font-weight: 700;
@@ -85,7 +72,7 @@ html, body, section {
 }
 
 body {
-  color: white;
+  color: black;
   font-family: sans-serif;
   font-size: 1.2rem;
   line-height: 150%;
@@ -107,21 +94,20 @@ nav {
 
 .container {
   display: flex;
-  
   margin: 0 ;
 }
 
 .left-half {
   background: linear-gradient(to right, rgba(96,96,96,1), rgba(96,96,96,1));
-  flex: 1;
-
+  flex: 0.5;
   padding: 1rem;
 }
 
 .right-half {
-  background: linear-gradient(to right, rgba(168,168,168,1), rgba(168,168,168,1));
+  background: linear-gradient(to right, rgba(168,168,168,1), rgba(96,96,96,1));
   flex: 1;
-  min-width: 1000px;
+  min-width: 500px;
+  padding-right: 200px; 
   padding: 1rem;
 }
 
@@ -138,7 +124,7 @@ input {
 }
 
 a {
-    color: black;
+    color: white;
 }
 
 table {
@@ -146,28 +132,54 @@ table {
 }
 
 label.user {
+  padding-left: 10px;
   padding-right: 10px;
+  color: black;
+}
+
+label.email {
+  padding-left: 10px;
+  padding-right: 30px;
+  color: black;
 }
 
 label.password{
+  padding-left: 10px;
   padding-right: 10px;
+   color: black;
 }
 
 button.login-button {
   padding-left: 50px ;
-  font: none;
+  color:black;
+}
+
+button.register-button {
+  margin-left: 10px;
 }
 
 div.login {
   float:right;
+  
 }
  
-input.password{
-  padding-right: 10px;
+input.user-reg{
+  font-size: x-small;
+  padding-left: 10px;
+}
+
+input.email{
+  font-size: x-small;
+  padding-left: 10px;
+}
+
+input.password-reg {
+  font-size: x-small;
+  padding-left: 10px;
 }
 
 section .container{
-  padding-right: 100px;
+  padding-left: 100px;
 }
 
 a.navbar-brand {
@@ -177,4 +189,16 @@ a.navbar-brand {
 
 input.ticker{
   color: black;
+}
+
+div.app-bar {
+background-color: rgba(0, 0, 255, 1);
+}
+
+div.registration {
+  padding-left: 10px;
+}
+
+button.close {
+  float:right;
 }
