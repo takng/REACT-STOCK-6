@@ -53,16 +53,6 @@ class App extends Component {
       names: {},
       currentTicker:""
     }
-    
-    this.searchTicker = this.searchTicker.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleOnChange = this.handleOnChange.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    // this.saveUserName = this.saveUserName.bind(this);
-    // this.saveUserPassword = this.saveUserPassword.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-    // this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
   componentWillMount() {
@@ -99,10 +89,8 @@ class App extends Component {
       .then(results => {
         return results.json()
       }).then(data => {
-        // console.log("this one")
-         // console.log(data)
+       
         let array = []
-        // for (let i of data.chart.result[0].indicators.quote[0].low) {
         let timestamps = data.chart.result[0].timestamp;
         for (let z = 0; z < timestamps.length; z++) {
           let low = data.chart.result[0].indicators.quote[0].low[z]
@@ -110,12 +98,10 @@ class App extends Component {
           let y = new Date(parseInt(a))
           
           array.push({name: y, price: low});
-          //console.log('parsing return', y, low)
-          // }
         }
-        //console.log('array', array)
+        
         this.setState({lows: array.splice(-100)}, function() {
-          //console.log('lows', this.state.lows)
+         
         });
         
       })
@@ -123,12 +109,10 @@ class App extends Component {
     Modal.setAppElement('body');
   }
 
-  componentDidMount() {
-  }
 
   //------------------------------Ticker------------------------------------------------------
   
-   searchTicker(event) {
+   searchTicker = (event)  => {
     if(event.key === "Enter")  {
       fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${this.state.currentTicker}?range=max`)
       .then(results => {
@@ -146,10 +130,7 @@ class App extends Component {
           
           array.push({name: y, price: low});
         }
-        console.log('array', array)
-        //const stateArray = array;
         this.setState({lows: array.splice(-100)}, function() {
-          console.log('lows', this.state.lows)
         });
         
       })
@@ -161,7 +142,6 @@ class App extends Component {
         }
         else return results.json()
       }).then(data => {
-        //console.log(data);
         let stocks = data.optionChain.result[0].quote
         this.setState({
           stocks: stocks,
@@ -180,8 +160,6 @@ class App extends Component {
           this.prevState({ news: news});
         }       
       })
-
-      
 
       event.preventDefault();
     }
@@ -246,7 +224,7 @@ class App extends Component {
     return result;
 }
 
-  handleClick(name) {
+  handleClick = (name) => {
       fetch(`https://query2.finance.yahoo.com/v7/finance/options/${name}`)
       .then(results => {
         return results.json()
@@ -262,9 +240,27 @@ class App extends Component {
          let news = this.parseXml(data).rss.channel.item
         this.setState({news: news});
       })
+
+      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${name}?range=max`)
+      .then(results => {
+        return results.json()
+      }).then(data => {
+        let array = []
+        let timestamps = data.chart.result[0].timestamp;
+        for (let z = 0; z < timestamps.length; z++) {
+          let low = data.chart.result[0].indicators.quote[0].low[z]
+          let a = new String(timestamps[z]) + '000'
+          let y = new Date(parseInt(a))
+      
+          array.push({name: y, price: low});
+        }
+          this.setState({lows: array.splice(-100)}, function() {
+        });
+        
+      })
   }
 
-  handleRemove(name) {
+  handleRemove = (name) => {
     let symObj = {}
     fetch(`http://localhost:3002/symbol/${this.state.currentUserId}/${name}`, { 
       method: 'POST'
@@ -285,7 +281,7 @@ class App extends Component {
     })
   }
 
-  handleAdd() {
+  handleAdd = () => {
     // if currentTicker is false for example empty is false it should not do anything
     let symObj = {}
     if(this.state.names[this.state.currentUserId].symbol.includes(this.state.currentTicker)){
@@ -321,22 +317,9 @@ class App extends Component {
 
   //----------------------Login-----------------------------------------------
 
-  handleInputChange = (event) => {
-    this.setState({userName: event.target.value})
-  }
+  
 
-  // saveUserName = (event) =>{
-  //   this.setState({userName: userName})
-  // }
-
-  // handlePasswordChange = (event) => {
-  //   this.setState({userPassword: event.target.value})
-  // }
-
-  // saveUserPassword = (event) => {
-  //   this.setState({userPassword: userPassword})
-  // }
-
+  //with refs you dont need onchange, key press anymore
    handleLogin = (event) => {
     const userName = this.refs.loginUserName.value;
     const password = this.refs.loginPassword.value;
@@ -345,7 +328,10 @@ class App extends Component {
     let currentUserId = this.state.currentUserId
      fetch(`http://localhost:3002/login/${userName}/${password}`)
       .then(results => {
-        return results.json()
+        if (results.status === 404) {
+          throw Error;
+        }
+        else return results.json()
       }).then(data => {
         console.log(data)
           this.setState({currentUserId: data[0].id})
@@ -354,8 +340,6 @@ class App extends Component {
           .then(results => {
             return results.json()
           }).then(data => {
-            console.log("TEST MESSAGE")
-            //console.log(data)
             symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
               return obj.symbol
             })}
@@ -380,7 +364,6 @@ class App extends Component {
       this.setState({newUser: newUser})
     }
 
-
   handlePasswordRegisterChange = (event) => {
       this.setState({newPassword: event.target.value})
     }
@@ -403,7 +386,10 @@ class App extends Component {
       method: 'POST'
     })
       .then(results => {
-        return results.json()
+        if (results.status === 404) {
+          throw Error;
+        }
+        else return results.json()
       }).then(data => {
         console.log("data",data)
           this.setState({currentUserId: data[0]})
@@ -429,15 +415,11 @@ class App extends Component {
 //---------------------------Logout--------------------------------------
    toggleLogout = () => this.setState({currentUserId: null});
 
-
-
 //-----------------------Side Drawer------------------------------------
 
   handleToggle = () => this.setState({open: !this.state.open});
 
-  toggleModal= () => { this.setState({isActive: !this.state.isActive})
-
-  }
+  toggleModal = () => this.setState({isActive: !this.state.isActive});
 
 //-----------------------Registration----------------------------------
   
@@ -456,7 +438,7 @@ class App extends Component {
   render() {
 
     let news = this.state.news.map((item, index) => {
-      return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>Read More </a><br/><br/></div>
+      return <div key={index}><b>{item.title['#text']}</b><br/>{item.description['#text']} <br/><a href={item.link['#text']}>Read More....... </a><br/><br/></div>
     });
     let currentUserId = this.state.currentUserId;
   
@@ -475,7 +457,6 @@ class App extends Component {
       )
     });
 
-
     let stocks = this.state.stocks
     if (Object.keys(stocks).length > 0) {
         return (
@@ -483,7 +464,7 @@ class App extends Component {
             <div className = "container">
               <nav className="navbar">
                 <div className="navbar-brand">
-                <a href="/" className="navbar-brand">REACT-STOCK</a>
+                <a href="/" className="navbar-brand">MY FINANCE</a>
                 <div className= "login">
                 <label className= "user" ><b>Username</b></label>
                 <input className= "user" ref="loginUserName" type="text" onChange={this.handleInputChange} placeholder="Enter User Name" name="uname" required/>
@@ -492,8 +473,7 @@ class App extends Component {
                 <FlatButton className ="new" type="submit" onClick={this.handleLogin} label="Login"  />
                 <FlatButton className ="new" onClick = {this.toggleModal} label="Create Account" />
               </div>
-                </div>
-                
+                </div> 
               </nav>
               <div><br/></div>
               <div><br/></div>
@@ -504,34 +484,33 @@ class App extends Component {
                   label="WatchList"
                   onClick={this.handleToggle}
                 /> 
-                <Drawer open={this.state.open}>
-                <AppBar title="WatchList" style={{backgroundColor: grey900}} />
-                <div><br/></div>
-                  {names}
-                </Drawer>
+                  <Drawer open={this.state.open}>
+                  <AppBar title="WatchList" style={{backgroundColor: grey900}} />
+                  <div><br/></div>
+                    {names}
+                  </Drawer>
                 </div> 
-                
-                  <Modal isOpen ={this.state.isActive} onRequestClose = {this.toggleModal} style={customStyles}>
-                    <label className= "new-user" ><b>Username</b></label>
-                    <input className = "user-reg" type="text" onChange={this.handleUserChange} onKeyPress={this.saveRegisterName} value={this.state.newUser} placeholder="Enter User Name" name="uname" required/><br/>
-                    <label className= "email" ><b>Email</b></label>
-                    <input className = "email"type="text" onChange={this.handleEmailChange} onKeyPress={this.saveEmail} value={this.state.email} placeholder="Enter Your Email" name="uname" required/><br/>
-                    <label className = "new-password"  ><b>Password</b></label>
-                    <input className = "password-reg" type="password" onChange={this.handlePasswordRegisterChange} onKeyPress={this.saveRegisterPassword} value={this.state.newPassword}placeholder="Enter Password" name="psw" required/><br/>
-                    <button className = "register-button" type="submit" onClick={this.handleRegistration}>Register</button>
-                    <button className = "close" onClick = {this.toggleModal}>Close</button>
-                  </Modal> 
+                <Modal isOpen ={this.state.isActive} onRequestClose = {this.toggleModal} style={customStyles}>
+                  <label className= "new-user" ><b>Username</b></label>
+                  <input className = "user-reg" type="text" onChange={this.handleUserChange} onKeyPress={this.saveRegisterName} value={this.state.newUser} placeholder="Enter User Name" name="uname" required/><br/>
+                  <label className= "email" ><b>Email</b></label>
+                  <input className = "email"type="text" onChange={this.handleEmailChange} onKeyPress={this.saveEmail} value={this.state.email} placeholder="Enter Your Email" name="uname" required/><br/>
+                  <label className = "new-password"  ><b>Password</b></label>
+                  <input className = "password-reg" type="password" onChange={this.handlePasswordRegisterChange} onKeyPress={this.saveRegisterPassword} value={this.state.newPassword}placeholder="Enter Password" name="psw" required/><br/>
+                  <button className = "register-button" type="submit" onClick={this.handleRegistration}>Register</button>
+                  <button className = "close" onClick = {this.toggleModal}>Close</button>
+                </Modal> 
                 <div><br/></div>
               <form>
-              <input className = "ticker"
-                onKeyPress={this.searchTicker} 
-                onChange={this.handleOnChange} 
-                value={this.state.currentTicker} 
-                type="text" 
-                placeholder="Enter a Ticker"
-              />
+                <input className = "ticker"
+                  onKeyPress={this.searchTicker} 
+                  onChange={this.handleOnChange} 
+                  value={this.state.currentTicker} 
+                  type="text" 
+                  placeholder="Enter a Ticker"
+                />
               </form>
-              {this.state.wrongInput && <span style={{ color: 'tomato' }}>symbol doesn't exist</span>}
+                {this.state.wrongInput && <span style={{ color: 'tomato' }}>Please enter a valid Ticker!</span>}
               <div><br/></div>
               <section className="container">
                 <LeftHalf stocks={stocks} handleAdd={this.handleAdd} lows={this.state.lows}/>
