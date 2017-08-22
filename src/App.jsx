@@ -17,9 +17,8 @@ import LeftHalf from './LeftHalf';
 import { Button, Card, Row, Col } from 'react-materialize';
 import Modal from'react-modal';
 import FlatButton from 'material-ui/FlatButton';
-
-
-export const grey500 = '#9e9e9e';
+  
+export const grey900 = '#212121';
 
 const customStyles = {
   content : {
@@ -57,10 +56,10 @@ class App extends Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.saveUserName = this.saveUserName.bind(this);
-    this.saveUserPassword = this.saveUserPassword.bind(this);
+    // this.saveUserName = this.saveUserName.bind(this);
+    // this.saveUserPassword = this.saveUserPassword.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    // this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
   componentWillMount() {
@@ -323,22 +322,25 @@ class App extends Component {
     this.setState({userName: event.target.value})
   }
 
-  saveUserName = (event) =>{
-    this.setState({userName: userName})
-  }
+  // saveUserName = (event) =>{
+  //   this.setState({userName: userName})
+  // }
 
-  handlePasswordChange = (event) => {
-    this.setState({userPassword: event.target.value})
-  }
+  // handlePasswordChange = (event) => {
+  //   this.setState({userPassword: event.target.value})
+  // }
 
-  saveUserPassword = (event) => {
-    this.setState({userPassword: userPassword})
-  }
+  // saveUserPassword = (event) => {
+  //   this.setState({userPassword: userPassword})
+  // }
 
    handleLogin = (event) => {
+    const userName = this.refs.loginUserName.value;
+    const password = this.refs.loginPassword.value;
+
     let symObj = {}
     let currentUserId = this.state.currentUserId
-     fetch(`http://localhost:3002/login/${this.state.userName}/${this.state.userPassword}`)
+     fetch(`http://localhost:3002/login/${userName}/${password}`)
       .then(results => {
         return results.json()
       }).then(data => {
@@ -355,6 +357,11 @@ class App extends Component {
               return obj.symbol
             })}
             this.setState({names: symObj});
+            this.setState({
+              userName: userName
+            })
+            this.refs.loginUserName.value = '';
+            this.refs.loginPassword.value = '';
             console.log(this.state)
           })
         })
@@ -408,10 +415,17 @@ class App extends Component {
               return obj.symbol
             })}
             this.setState({names: symObj});
+            this.setState({
+              userName: this.state.newUser
+            })
             console.log("newstate",this.state)
           })
       })
   }
+
+//---------------------------Logout--------------------------------------
+   toggleLogout = () => this.setState({currentUserId: null});
+
 
 
 //-----------------------Side Drawer------------------------------------
@@ -458,7 +472,6 @@ class App extends Component {
       )
     });
 
-    
 
     let stocks = this.state.stocks
     if (Object.keys(stocks).length > 0) {
@@ -466,16 +479,18 @@ class App extends Component {
           <MuiThemeProvider>
             <div className = "container">
               <nav className="navbar">
+                <div className="navbar-brand">
                 <a href="/" className="navbar-brand">REACT-STOCK</a>
                 <div className= "login">
-                <h3 className="navbar-login>"></h3>
                 <label className= "user" ><b>Username</b></label>
-                <input type="text" onChange={this.handleInputChange} onKeyPress={this.saveUserName} value={this.state.userName} placeholder="Enter User Name" name="uname" required/>
+                <input ref="loginUserName" type="text" onChange={this.handleInputChange} placeholder="Enter User Name" name="uname" required/>
                 <label className = "password"  ><b>Password</b></label>
-                <input className = "password" type="password" onChange={this.handlePasswordChange} onKeyPress={this.saveUserPassword} value={this.state.userPassword}placeholder="Enter Password" name="psw" required/>
-                <FlatButton className ="new" type="submit" onClick={this.handleLogin} label="Login" />
+                <input ref="loginPassword" className = "password" type="password" placeholder="Enter Password" name="psw" required/>
+                <FlatButton className ="new" type="submit" onClick={this.handleLogin} label="Login"  />
                 <FlatButton className ="new" onClick = {this.toggleModal} label="Create Account" />
               </div>
+                </div>
+                
               </nav>
               <div><br/></div>
               <div><br/></div>
@@ -487,10 +502,8 @@ class App extends Component {
                   onClick={this.handleToggle}
                 /> 
                 <Drawer open={this.state.open}>
-                <div className = "app-bar">
-                <AppBar title="WatchList" style={{backgroundColor: grey500}}/>
-                </div>
-                <div><br/></div>
+                <AppBar title="WatchList" style={{backgroundColor: grey900}} />
+               
                   {names}
                 </Drawer>
                 </div> 

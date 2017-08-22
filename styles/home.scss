@@ -10,44 +10,18 @@ body {
   margin: 80px 0;
 }
 
-.chatbar {
-  background: rgba(168,168,168,1);
-  border-top: 1px solid black;
-  bottom: 0;
-  display: flex;
-  left: 0;
-  padding: 8px;
-  position: fixed;
-  right: 0;
+div.navbar-brand {
+  width: 1500px;
+  color: black;
 }
-
-.drawer {
-  background: darkgray;
-}
-
-.chatbar-username {
-  flex: 3;
-}
-
-.message {
-  display: flex;
-  padding: 8px;
-}
-
-.message.system {
-  font-style: italic;
-  padding: 8px 20px;
-}
-
-
-
 
 .navbar {
-  background: rgba(168,168,168,1);
+  
+  background-image: url(http://localhost:3002/stock.jpg);
+  background-size: 200px 130px;
   border-bottom: 1px solid black;
   height: 120px;
   left: 0;
-  padding: 0 10px;
   position: fixed;
   right: 0;
   top: 0;
@@ -55,7 +29,7 @@ body {
 }
 
 .navbar-brand {
-  color: black ;
+  color: white ;
   display: block;
   float: left;
   font-weight: 700;
@@ -64,7 +38,7 @@ body {
   line-height: 50px;
   padding: 0 10px;
   text-decoration: none;
-  background: rgba(168,168,168,1);
+  background: black;
 }
 
 
@@ -89,6 +63,7 @@ h1 {
   font-size: 0.9em;
   margin: 0 0 0.75rem 0;
 }
+
 nav {
   background-color: rgba(0, 0, 255, 1);
 }
@@ -99,13 +74,13 @@ nav {
 }
 
 .left-half {
-  background: linear-gradient(to right, rgba(96,96,96,1), rgba(96,96,96,1));
+  
   flex: 0.5;
+  padding-left: 0px !important;
   padding: 1rem;
 }
 
 .right-half {
-  background: linear-gradient(to right, rgba(168,168,168,1), rgba(96,96,96,1));
   flex: 1;
   min-width: 500px;
   padding-right: 200px; 
@@ -134,20 +109,23 @@ table {
 
 label.user {
   padding-left: 10px;
+  font-size: medium;
   padding-right: 10px;
-  color: black;
+  color: white;
 }
 
 label.email {
   padding-left: 10px;
+
   padding-right: 30px;
   color: black;
 }
 
 label.password{
   padding-left: 10px;
+  font-size: medium;
   padding-right: 10px;
-   color: black;
+   color: white;
 }
 
 button.login-button {
@@ -161,7 +139,7 @@ button.register-button {
 
 div.login {
   float:right;
-  
+  padding-right: 100px;
 }
  
 input.user-reg{
@@ -184,20 +162,19 @@ section .container{
 }
 
 a.navbar-brand {
-  background: rgba(168,168,168,1);
-
+  background: black;
 }
 
 input.ticker{
   color: black;
 }
 
-div.app-bar {
-background-color: rgba(0, 0, 255, 1);
-}
-
 div.registration {
   padding-left: 10px;
+}
+
+button.new {
+  color: white !important;
 }
 
 button.close {
@@ -207,3 +184,41 @@ button.close {
 h1.news {
   font-size: 1em;
 }
+
+ tr.last-tr {
+    border-bottom: 1px solid black !important;
+ }
+
+div.stats {
+  background-color: #026ed1;
+  height: 50px;
+}
+
+div.news {
+  background-color: #026ed1;
+  height: 50px;
+  padding-left: 0px;  
+}
+
+h1.stats {
+  padding-left: 200px;
+  padding-top: 10px;
+}
+
+h1.news {
+  padding-left: 170px;
+  padding-top: 10px;
+}
+
+   
+
+
+
+
+
+
+
+
+
+
+

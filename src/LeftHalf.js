@@ -23,6 +23,10 @@ export default ({ stocks, handleAdd, lows }) => {
   return (
       <div className="left-half">
           <article>
+          <div className = "stats" >
+          <h1 className = "stats"> Stock Details</h1>
+          </div>
+          <div><br/></div>
           <table className ="bordered">
             <tbody>
               <tr>
@@ -153,7 +157,7 @@ export default ({ stocks, handleAdd, lows }) => {
                 <td></td>
                <td>{stocks.fiftyTwoWeekLow}</td>
               </tr>
-              <tr>
+              <tr className= "last-tr">
                <td>Volume</td>
                 <td></td>
                 <td></td>
@@ -173,7 +177,7 @@ export default ({ stocks, handleAdd, lows }) => {
           </table>
              <div><br/></div>
 
-             <LineChart width={400} height={300} data={lows}>
+             <LineChart width={500} height={300} data={lows}>
                 <Line type="monotone" dataKey="uv" stroke="#8884d8" />
                 <CartesianGrid stroke="#ccc" />
                 <XAxis dataKey="Date" />
