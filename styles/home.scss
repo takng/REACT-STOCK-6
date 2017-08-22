@@ -70,7 +70,7 @@ nav {
 
 .container {
   display: flex;
-  margin: 0 ;
+  margin: auto !important;
 }
 
 .left-half {
@@ -232,7 +232,7 @@ input.password{
 }
 
 td.percentage{
-  color:red;
+  color:red;  
 }
 
 
