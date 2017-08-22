@@ -11,7 +11,7 @@ body {
 }
 
 div.navbar-brand {
-  width: 1500px;
+  width: 100%;
   color: black;
 }
 
@@ -71,6 +71,7 @@ nav {
 .container {
   display: flex;
   margin: auto !important;
+  width: 100% !important;
 }
 
 .left-half {
@@ -234,6 +235,27 @@ input.password{
 td.percentage{
   color:red;  
 }
+
+section.container{
+  margin: auto !important;
+  width: auto !important;
+}
+
+.container {
+  @media only screen and (min-width: 993px){
+    width:100% !important;
+    }
+  @media only screen and (min-width: 601px){
+    width: 100% !important;
+    }
+  }
+
+
+
+
+
+
+
 
 
 
