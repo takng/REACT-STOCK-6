@@ -106,7 +106,7 @@ class App extends Component {
           let a = new String(timestamps[z]) + '000'
           let y = new Date(parseInt(a))
           
-          array.push({name: y, uv: low});
+          array.push({name: y, price: low});
           //console.log('parsing return', y, low)
           // }
         }
@@ -141,7 +141,7 @@ class App extends Component {
           let a = new String(timestamps[z]) + '000'
           let y = new Date(parseInt(a))
           
-          array.push({name: y, uv: low});
+          array.push({name: y, price: low});
         }
         console.log('array', array)
         //const stateArray = array;
@@ -503,7 +503,7 @@ class App extends Component {
                 /> 
                 <Drawer open={this.state.open}>
                 <AppBar title="WatchList" style={{backgroundColor: grey900}} />
-               
+                <div><br/></div>
                   {names}
                 </Drawer>
                 </div> 

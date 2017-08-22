@@ -2,8 +2,8 @@
 
 body {
   background: white;
-  padding-right: 200px;
-  padding-left: 300px;
+  padding-right: 100px;
+  padding-left: 270px;
   color: black;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
@@ -74,7 +74,6 @@ nav {
 }
 
 .left-half {
-  
   flex: 0.5;
   padding-left: 0px !important;
   padding: 1rem;
@@ -82,7 +81,7 @@ nav {
 
 .right-half {
   flex: 1;
-  min-width: 500px;
+  min-width: 600px;
   padding-right: 200px; 
   padding: 1rem;
 }
@@ -125,7 +124,7 @@ label.password{
   padding-left: 10px;
   font-size: medium;
   padding-right: 10px;
-   color: white;
+  color: white;
 }
 
 button.login-button {
@@ -206,7 +205,7 @@ h1.stats {
 }
 
 h1.news {
-  padding-left: 170px;
+  padding-left: 230px;
   padding-top: 10px;
 }
 

@@ -178,9 +178,10 @@ export default ({ stocks, handleAdd, lows }) => {
              <div><br/></div>
 
              <LineChart width={500} height={300} data={lows}>
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                <Line type="monotone" dataKey="price" stroke="#026ed1" />
                 <CartesianGrid stroke="#ccc" />
                 <XAxis dataKey="Date" />
+                <Tooltip />
                 <YAxis />
               </LineChart>
             <div className = "button">
