@@ -9,6 +9,7 @@ import ContentRemove from 'material-ui/svg-icons/content/remove';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {blue500} from 'material-ui/styles/colors';
 import {red500} from 'material-ui/styles/colors';
+import {lightBlue800} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import AppBar from 'material-ui/AppBar';
 import FontIcon from 'material-ui/FontIcon';
@@ -20,11 +21,13 @@ import FlatButton from 'material-ui/FlatButton';
   
 export const grey900 = '#212121';
 
+
+
 const customStyles = {
   content : {
     top                   : '50%',
     left                  : '50%',
-    right                 : 'auto',
+    right                 : 'auto', 
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)'
@@ -443,7 +446,7 @@ class App extends Component {
       return (
         <div>
           Welcome {this.state.userName}
-          <FlatButton className ="new" onClick = {this.toggleLogout} label="Logout" />
+          <FlatButton className ="new" onClick = {this.toggleLogout} label="Logout" labelStyle={{color: lightBlue800}} />
         </div>
       )
     }
@@ -466,7 +469,7 @@ class App extends Component {
         } >
           {name}
           <IconButton tooltip="SVG Icon" >
-              <ContentRemove color={grey500} onClick={ (event) => this.handleRemove(name) }/>
+              <ContentRemove color={grey900} onClick={ (event) => this.handleRemove(name) }/>
           </IconButton>
         </MenuItem>
       )
@@ -483,7 +486,7 @@ class App extends Component {
                 <a href="/" className="navbar-brand">REACT-STOCK</a>
                 <div className= "login">
                 <label className= "user" ><b>Username</b></label>
-                <input ref="loginUserName" type="text" onChange={this.handleInputChange} placeholder="Enter User Name" name="uname" required/>
+                <input className= "user" ref="loginUserName" type="text" onChange={this.handleInputChange} placeholder="Enter User Name" name="uname" required/>
                 <label className = "password"  ><b>Password</b></label>
                 <input ref="loginPassword" className = "password" type="password" placeholder="Enter Password" name="psw" required/>
                 <FlatButton className ="new" type="submit" onClick={this.handleLogin} label="Login"  />
@@ -509,11 +512,11 @@ class App extends Component {
                 </div> 
                 
                   <Modal isOpen ={this.state.isActive} onRequestClose = {this.toggleModal} style={customStyles}>
-                    <label className= "user" ><b>Username</b></label>
+                    <label className= "new-user" ><b>Username</b></label>
                     <input className = "user-reg" type="text" onChange={this.handleUserChange} onKeyPress={this.saveRegisterName} value={this.state.newUser} placeholder="Enter User Name" name="uname" required/><br/>
                     <label className= "email" ><b>Email</b></label>
                     <input className = "email"type="text" onChange={this.handleEmailChange} onKeyPress={this.saveEmail} value={this.state.email} placeholder="Enter Your Email" name="uname" required/><br/>
-                    <label className = "password"  ><b>Password</b></label>
+                    <label className = "new-password"  ><b>Password</b></label>
                     <input className = "password-reg" type="password" onChange={this.handlePasswordRegisterChange} onKeyPress={this.saveRegisterPassword} value={this.state.newPassword}placeholder="Enter Password" name="psw" required/><br/>
                     <button className = "register-button" type="submit" onClick={this.handleRegistration}>Register</button>
                     <button className = "close" onClick = {this.toggleModal}>Close</button>

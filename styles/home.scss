@@ -113,13 +113,6 @@ label.user {
   color: white;
 }
 
-label.email {
-  padding-left: 10px;
-
-  padding-right: 30px;
-  color: black;
-}
-
 label.password{
   padding-left: 10px;
   font-size: medium;
@@ -209,11 +202,38 @@ h1.news {
   padding-top: 10px;
 }
 
-   
+label.new-user {
+  padding-left: 10px;
+  font-size: medium;
+  padding-right: 10px;
+  color: black;
+}
 
+label.new-password{
+  padding-left: 10px;
+  font-size: medium;
+  padding-right: 10px;
+  color: black;
+}
 
+label.email {
+  padding-left: 10px;
+  font-size: medium;
+  padding-right: 30px;
+  color: black;
+}
 
+input.user{
+  color:lightgrey;
+}
 
+input.password{
+  color:lightgrey;
+}
+
+td.percentage{
+  color:red;
+}
 
 
 
