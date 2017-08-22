@@ -16,7 +16,6 @@ div.navbar-brand {
 }
 
 .navbar {
-  
   background-image: url(http://localhost:3002/stock.jpg);
   background-size: 200px 130px;
   border-bottom: 1px solid black;
@@ -64,14 +63,11 @@ h1 {
   margin: 0 0 0.75rem 0;
 }
 
-nav {
-  background-color: rgba(0, 0, 255, 1);
-}
-
 .container {
   display: flex;
   margin: auto !important;
   width: 100% !important;
+  max-width: inherit;
 }
 
 .left-half {
@@ -199,7 +195,7 @@ h1.stats {
 }
 
 h1.news {
-  padding-left: 230px;
+  padding-left: 260px;
   padding-top: 10px;
 }
 

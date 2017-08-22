@@ -4,20 +4,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { Button, Card, Row, Col } from 'react-materialize';
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'; 
 
-
-
-
-// const data = [
-//       // {name: 'Page A', uv: 1},
-//       // {name: 'Page A', uv: 2},
-//       // {name: 'Page A', uv: 3},
-//       // {name: 'Page A', uv: 7},
-//       // {name: 'Page A', uv: 5},
-//       // {name: 'Page A', uv: 2},
-//       // {name: 'Page A', uv: 6},
-// ];
-
-const d = []
+//const d = []
 
 export default ({ stocks, handleAdd, lows }) => {
   console.log(stocks.regularMarketChangePercent)

@@ -298,7 +298,6 @@ class App extends Component {
           .then(results => {
             return results.json()
           }).then(data => {
-            //console.log(data)
             symObj[this.state.currentUserId.toString()] = {symbol: data.map((obj) => {
               return obj.symbol
             })}
