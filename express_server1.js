@@ -201,6 +201,7 @@ app.get("/login/:name/:password", (req, res) => {
   })
 })
 
+<<<<<<< HEAD
 // Register
 //app.post("/register/:name/:email/:password", (req, res) => {
 //	  console.log(req.params)
@@ -241,6 +242,49 @@ app.post("/register/:name/:email/:password",
         .returning("id")
         .then((id) => {
  	        console.log(req.params)
+=======
+// Price fluctuate
+app.post("/fluctuate/:symbol/:email", (req, res) => {
+	  console.log(req.params)
+>>>>>>> fc4c30befef2c55aac6793b19af27e5449731e9b
+          let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
+          let data = {
+            from: from_who,
+            to: req.params.email,
+            subject: req.params.symbol,
+            text: "REACT-STOCK price fluctuate more than 1%, be alert."
+          };
+
+          mailgun.messages().send(data, function(err, body) {
+	    let msg = 'Email sent';
+            if (err) {
+              console.log("ERROR: ", err);
+              console.log("ERROR BODY: ", body);
+  	      msg = 'Error occured'
+            } 
+	    console.log(body)
+	    res.json({message: msg })
+          });
+        })
+
+
+// Register
+app.post("/register/:name/:email/:password",
+  (req, res) => {
+    knex("users")
+    .count("name")
+    .where("name", req.params.name)
+    .then((results) => {
+      if(results[0].count == 0){
+        knex("users")
+        .insert({
+          name: req.params.name,
+          email: req.params.email,
+          password: req.params.password
+        })
+        .returning("id")
+        .then((id) => {
+ 	  console.log(req.params)
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
             from: from_who,
@@ -265,43 +309,6 @@ app.post("/register/:name/:email/:password",
       }
     })
   })
-
-/*
-  (req, res) => {
-    knex("users")
-    .count("name")
-    .where("name", req.params.name)
-    .then((results) => {
-      if(results[0].count == 0){
-        knex("users")
-        .insert({
-          name: req.params.name,
-          email: req.params.email,
-          password: req.params.password
-        })
-        .then((id) => {
-          let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
-          let data = {
-            from: from_who,
-            // to: req.params.email,
-            to: "tak_ng@yahoo.com",
-            subject: "REACT-STOCK User ID created",
-            text: "REACT-STOCK User ID created, have fun."
-          };
-
-          mailgun.messages().send(data, function(err, body) {
-            if (err) {
-              console.log("ERROR: ", err);
-              console.log("ERROR BODY: ", body);
-            } 
-          });
-          res.send(id)
-        })
-//        .returning("id")
-      }
-    })
-*/
-//  })
 
 // Logout
 app.get("/logout",
