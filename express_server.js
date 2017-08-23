@@ -12,6 +12,13 @@ const knexConfig  = require("./knexfile")
 const knex        = require("knex")(knexConfig[ENV])
 const morgan      = require("morgan")
 const knexLogger  = require("knex-logger")
+
+const Mailgun = require("mailgun-js");
+const api_key = "key-c2976c8955c990f0429de584a51e234f";
+const domain = "sandbox0a90c21df17f400dbf4630709c915ef5.mailgun.org";
+
+const from_who = "REACT-STOCK@email.com";
+
 //const db          = require("./db")
 // Seperated Routes for each Resource
 //const usersRoutes = require("./routes/users")
@@ -195,6 +202,29 @@ app.get("/login/:name/:password", (req, res) => {
 })
 
 // Register
+//app.post("/register/:name/:email/:password", (req, res) => {
+//	  console.log(req.params)
+//          let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
+//          let data = {
+//            from: from_who,
+//            to: req.params.email,
+//            subject: "REACT-STOCK User ID created",
+//            text: "REACT-STOCK User ID created, have fun."
+//          };
+//
+//          mailgun.messages().send(data, function(err, body) {
+//	    let msg = 'Email sent';
+//            if (err) {
+//              console.log("ERROR: ", err);
+//              console.log("ERROR BODY: ", body);
+//  	      msg = 'Error occured'
+//            } 
+//	    console.log(body)
+//	    res.json({message: msg })
+//          });
+
+
+// Register
 app.post("/register/:name/:email/:password",
   (req, res) => {
     knex("users")
@@ -210,11 +240,68 @@ app.post("/register/:name/:email/:password",
         })
         .returning("id")
         .then((id) => {
+ 	  console.log(req.params)
+          let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
+          let data = {
+            from: from_who,
+            to: req.params.email,
+            subject: "REACT-STOCK User ID created",
+            text: "REACT-STOCK User ID created, have fun."
+          };
+
+          mailgun.messages().send(data, function(err, body) {
+	    let msg = 'Email sent';
+            if (err) {
+              console.log("ERROR: ", err);
+              console.log("ERROR BODY: ", body);
+  	      msg = 'Error occured'
+            } 
+	    console.log(body)
+	    // res.json({message: msg })
+          });
+
           res.send(id)
         })
       }
     })
   })
+
+/*
+  (req, res) => {
+    knex("users")
+    .count("name")
+    .where("name", req.params.name)
+    .then((results) => {
+      if(results[0].count == 0){
+        knex("users")
+        .insert({
+          name: req.params.name,
+          email: req.params.email,
+          password: req.params.password
+        })
+        .then((id) => {
+          let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
+          let data = {
+            from: from_who,
+            // to: req.params.email,
+            to: "tak_ng@yahoo.com",
+            subject: "REACT-STOCK User ID created",
+            text: "REACT-STOCK User ID created, have fun."
+          };
+
+          mailgun.messages().send(data, function(err, body) {
+            if (err) {
+              console.log("ERROR: ", err);
+              console.log("ERROR BODY: ", body);
+            } 
+          });
+          res.send(id)
+        })
+//        .returning("id")
+      }
+    })
+*/
+//  })
 
 // Logout
 app.get("/logout",
