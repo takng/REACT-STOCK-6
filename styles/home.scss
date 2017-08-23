@@ -40,7 +40,6 @@ div.navbar-brand {
   background: black;
 }
 
-
 html, body, section {
   height: 100%;
 }
@@ -88,7 +87,7 @@ input {
 }
 
 .new {
-  font-size: 1.5  em;
+  font-size: 1.5em;
 }
 
 .stocks {
@@ -96,7 +95,7 @@ input {
 }
 
 a {
-    color: #026ed1;
+  color: #026ed1;
 }
 
 table {
@@ -110,7 +109,7 @@ label.user {
   color: white;
 }
 
-label.password{
+label.password {
   padding-left: 10px;
   font-size: medium;
   padding-right: 10px;
@@ -127,16 +126,16 @@ button.register-button {
 }
 
 div.login {
-  float:right;
+  float: right;
   padding-right: 100px;
 }
  
-input.user-reg{
+input.user-reg {
   font-size: x-small;
   padding-left: 10px;
 }
 
-input.email{
+input.email {
   font-size: x-small;
   padding-left: 10px;
 }
@@ -146,7 +145,7 @@ input.password-reg {
   padding-left: 10px;
 }
 
-section .container{
+section .container {
   padding-left: 100px;
 }
 
@@ -154,7 +153,7 @@ a.navbar-brand {
   background: black;
 }
 
-input.ticker{
+input.ticker {
   color: black;
 }
 
@@ -167,7 +166,7 @@ button.new {
 }
 
 button.close {
-  float:right;
+  float: right;
 }
 
 h1.news {
@@ -175,7 +174,7 @@ h1.news {
 }
 
  tr.last-tr {
-    border-bottom: 1px solid black !important;
+  border-bottom: 1px solid black !important;
  }
 
 div.stats {
@@ -206,7 +205,7 @@ label.new-user {
   color: black;
 }
 
-label.new-password{
+label.new-password {
   padding-left: 10px;
   font-size: medium;
   padding-right: 10px;
@@ -220,19 +219,24 @@ label.email {
   color: black;
 }
 
-input.user{
-  color:lightgrey;
+input.user {
+  color: lightgrey;
 }
 
-input.password{
-  color:lightgrey;
+input.password {
+  color: lightgrey;
 }
 
-td.percentage{
-  color:red;  
+
+td.percentage {
+  color: green;  
 }
 
-section.container{
+td.percent {
+  color: red;  
+}
+
+section.container {
   margin: auto !important;
   width: auto !important;
 }

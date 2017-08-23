@@ -314,6 +314,10 @@ class App extends Component {
     this.setState({currentTicker: event.target.value.toUpperCase()});
   }
 
+  handleMouseClick = (event) =>{
+    this.setState({currentTicker:""})
+  }
+
   //----------------------Login-----------------------------------------------
 
   
@@ -504,12 +508,13 @@ class App extends Component {
                 <input className = "ticker"
                   onKeyPress={this.searchTicker} 
                   onChange={this.handleOnChange} 
-                  value={this.state.currentTicker} 
+                  value={this.state.currentTicker}
+                  onClick = {this.handleMouseClick} 
                   type="text" 
-                  placeholder="Enter a Ticker"
+                  placeholder="Enter a Symbol"
                 />
               </form>
-                {this.state.wrongInput && <span style={{ color: 'tomato' }}>Please enter a valid Ticker!</span>}
+                {this.state.wrongInput && <span style={{ color: 'tomato' }}>Please enter a valid Symbol!</span>}
               <div><br/></div>
               <section className="container">
                 <LeftHalf stocks={stocks} handleAdd={this.handleAdd} lows={this.state.lows}/>
