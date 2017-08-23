@@ -6,9 +6,10 @@ import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'rec
 
 //const d = []
 
-export default ({ stocks, handleAdd, lows }) => {
+export default ({ stocks, handleAdd, lows, fluctuate }) => {
   console.log(stocks.regularMarketChangePercent)
   if (stocks.regularMarketChangePercent >= 1) {
+
       return (
       <div className="left-half">
           <article>

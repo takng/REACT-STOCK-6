@@ -114,6 +114,8 @@ class App extends Component {
   
    searchTicker = (event)  => {
     if(event.key === "Enter")  {
+
+      this.fluctuate();
       fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${this.state.currentTicker}?range=max`)
       .then(results => {
         return results.json()
@@ -161,7 +163,9 @@ class App extends Component {
         }       
       })
 
+      
       event.preventDefault();
+      
     }
   }
 
@@ -424,7 +428,23 @@ class App extends Component {
 
   toggleModal = () => this.setState({isActive: !this.state.isActive});
 
-//-----------------------Registration----------------------------------
+//------------------------mailgun---------------------------------------
+
+ fluctuate = (event) => {
+  if(this.state.stocks.regularMarketChangePercent >= 1){
+  fetch(`http://localhost:3002/fluctuate/${this.state.currentTicker}/${this.state.email}`, { 
+      method: 'POST'
+    })
+      .then(results => {
+        results.json()
+      })
+    }
+ }
+
+
+
+
+//------------------------------------------------------------------------
   
   showLogoutButton = () => {
     if (this.state.currentUserId) {
