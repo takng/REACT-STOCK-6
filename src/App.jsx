@@ -467,7 +467,7 @@ class App extends Component {
             <div className = "container">
               <nav className="navbar">
                 <div className="navbar-brand">
-                <a href="/" className="navbar-brand">MY FINANCE</a>
+                <a href="/" className="navbar-brand">Stock Watch</a>
                 <div className= "login">
                 <label className= "user" ><b>Username</b></label>
                 <input className= "user" ref="loginUserName" type="text" onChange={this.handleInputChange} placeholder="Enter User Name" name="uname" required/>

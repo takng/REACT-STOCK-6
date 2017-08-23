@@ -1,4 +1,4 @@
-"use strict"
+    "use strict"
 
 require("dotenv").config()
 
@@ -240,7 +240,7 @@ app.post("/register/:name/:email/:password",
         })
         .returning("id")
         .then((id) => {
- 	  console.log(req.params)
+ 	        console.log(req.params)
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
             from: from_who,
