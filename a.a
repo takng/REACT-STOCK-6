@@ -1,0 +1,30 @@
+      fetch(`https://query2.finance.yahoo.com/v7/finance/options/${this.state.currentTicker}`)
+      .then(results => {
+        if (results.status === 404) {
+          this.setState({ currentTicker: '', wrongInput: true })
+        }
+        else return results.json()
+      }).then(data => {
+        let stocks = data.optionChain.result[0].quote
+        this.setState({
+          stocks: stocks,
+        })
+      })
+
+ 
+
+
+
+ fluctuate = (event) => {
+//  if(this.state.stocks.regularMarketChangePercent >= 1){
+  if(this.state.stocks.regularMarketChangePercent < 1){
+  fetch(`http://localhost:3002/fluctuate/${this.state.currentTicker}/${this.state.email}`, { 
+      method: 'POST'
+    })
+      .then(results => {
+        results.json()
+      })
+    }
+ }
+
+

@@ -204,6 +204,52 @@ app.get("/login/:name/:password", (req, res) => {
   })
 })
 
+// Price all_fluctuate
+app.get("/all_fluctuate/:user_id", (req, res) => {
+  let arr = [];
+  knex("users")
+  .join("user_symbols", "users.id", "=", "user_symbols.user_id")
+  .where({user_id: req.params.user_id})
+  // .where({user_id: 54})
+  .andWhere("favorite", true)
+  .select("symbol")
+  .then((results) => {
+    // res.json(results)
+    results = results.map(function(o){
+      for(let i in o){
+         arr.push(o[i])
+	  console.log(req.params)
+	  console.log(req.params.email)
+	  console.log(req.params.symbol)
+          let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
+          let data = {
+            from: from_who,
+            //to: req.params.email,
+            to: "takng789+test@gmail.com",
+            // subject: req.params.symbol,
+            subject: o[i],
+            text: "REACT-STOCK price fluctuate more than 1%, be alert."
+          };
+
+          mailgun.messages().send(data, function(err, body) {
+	    let msg = 'Email sent';
+            if (err) {
+              console.log("ERROR: ", err);
+              console.log("ERROR BODY: ", body);
+  	      msg = 'Error occured'
+            } 
+	    console.log(body)
+	    res.json({message: msg })
+          });
+        }
+      })
+    });
+    res.json(arr)
+  .catch(function(error) {
+    console.log(error)
+  })
+})
+
 // Price fluctuate
 app.post("/fluctuate/:symbol/:email", (req, res) => {
 	  console.log(req.params)
