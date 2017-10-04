@@ -96,8 +96,8 @@ app.post("/symbol/:user_id/:symbol", (req, res) => {
 
 // app.post("/user_symbol", (req, res)=>{
 app.post("/ins_user_symbol/:user_id/:symbol", (req, res) => {
-console.log (req.body.user_id)
-console.log (req.body.symbol)
+//console.log (req.body.user_id)
+//console.log (req.body.symbol)
 
   knex("user_symbols")
     .insert(
@@ -115,13 +115,10 @@ console.log (req.body.symbol)
 })
 
 app.get("/symbols/:user_id", (req, res) => {
-console.log ("HERE - get")
-console.log (req.params.user_id)
   let arr = [];
   knex("users")
   .join("user_symbols", "users.id", "=", "user_symbols.user_id")
   .where({user_id: req.params.user_id})
-  // .where({user_id: 54})
   .andWhere("favorite", true)
   .select("symbol")
   .then((results) => {
@@ -207,8 +204,6 @@ app.get("/login/:name/:password", (req, res) => {
 // Price fluctuate
 app.post("/fluctuate/:symbol/:email", (req, res) => {
 	  console.log(req.params)
-	  console.log(req.params.email)
-	  console.log(req.params.symbol)
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
             from: from_who,
