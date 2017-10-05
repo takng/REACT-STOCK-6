@@ -47,10 +47,10 @@ const from_who = "REACT-STOCK@email.com";
 //app.use("/api/users", usersRoutes(knex))
 
 // Price all_fluctuate
+
   let arr = [];
   knex("users")
   .join("user_symbols", "users.id", "=", "user_symbols.user_id")
-//  .where({user_id: 54})
   .andWhere("favorite", true)
   .select("symbol", "email")
   .then((results) => {
@@ -69,29 +69,28 @@ const from_who = "REACT-STOCK@email.com";
            email = o[key]; 
            cnt = 0;
          }
-	    console.log(key)
-	    console.log(arr)
+//	    console.log(key)
+//	    console.log(arr)
          if (cnt == 0) {
 
-var request = require("request");
+let request = require("request");
+//var request = require('sync-request');
 
-var stock_url = `https://query2.finance.yahoo.com/v7/finance/options/${symbol}`;
-var stock_data = {};
-var stocks = 0;
+let stock_url = `https://query2.finance.yahoo.com/v7/finance/options/${symbol}`;
+let stock_data = {};
+let stocks = 0;
 
 request(stock_url, function (error, response, body) { 
     if (!error && response.statusCode == 200) {  
        // var stock_data = body;
         stock_data = JSON.parse(body);
         stocks = stock_data.optionChain.result[0].quote;
-        console.log("Yahoo Finance API: ", stock_data);
-    };
-});
-    while(stock_data === undefined) {
-      require('deasync').runLoopOnce();
-    }
-
+        console.log("Yahoo Finance API symbol: ", symbol);
         console.log("stock_change_%: ", stocks.regularMarketChangePercent);       
+    };
+//    while(stock_data === undefined) {
+//      require('deasync').runLoopOnce();
+//    }
          if(Math.abs(stocks.regularMarketChangePercent) > 1){
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
@@ -112,6 +111,8 @@ request(stock_url, function (error, response, body) {
 	    console.log(body)
           });
          } //if(Math.abs(stocks.regularMarketChangePercent) > 1)
+});
+
 
          } // for(let key in o)
 
@@ -119,7 +120,7 @@ request(stock_url, function (error, response, body) {
       })
     });
 
-	    console.log(arr)
+//	    console.log(arr)
 //process.exit() 
 
  
