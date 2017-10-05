@@ -88,14 +88,11 @@ request(stock_url, function (error, response, body) {
         console.log("Yahoo Finance API symbol: ", symbol);
         console.log("stock_change_%: ", stocks.regularMarketChangePercent);       
     };
-//    while(stock_data === undefined) {
-//      require('deasync').runLoopOnce();
-//    }
+
          if(Math.abs(stocks.regularMarketChangePercent) > 1){
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
             from: from_who,
-            // to: "takng789+test@gmail.com",
             to: email,
             subject: symbol,
             text: "REACT-STOCK price fluctuate more than 1%, be alert."
@@ -112,7 +109,6 @@ request(stock_url, function (error, response, body) {
           });
          } //if(Math.abs(stocks.regularMarketChangePercent) > 1)
 });
-
 
          } // for(let key in o)
 
