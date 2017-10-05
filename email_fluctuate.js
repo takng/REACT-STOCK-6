@@ -59,19 +59,40 @@ const from_who = "REACT-STOCK@email.com";
       let cnt = 0;
       let symbol = "";
       let email = "";
-      for(let i in o){
-         arr.push(o[i])
+      for(let key in o){
+         arr.push(o[key])
          if (cnt == 0) {
-           symbol = o[i]; 
+           symbol = o[key]; 
            cnt = 1;
          }
          else {
-           email = o[i]; 
+           email = o[key]; 
            cnt = 0;
          }
-	    console.log(i)
+	    console.log(key)
 	    console.log(arr)
          if (cnt == 0) {
+
+var request = require("request");
+
+var stock_url = `https://query2.finance.yahoo.com/v7/finance/options/${symbol}`;
+var stock_data = {};
+var stocks = 0;
+
+request(stock_url, function (error, response, body) { 
+    if (!error && response.statusCode == 200) {  
+       // var stock_data = body;
+        stock_data = JSON.parse(body);
+        stocks = stock_data.optionChain.result[0].quote;
+        console.log("Yahoo Finance API: ", stock_data);
+    };
+});
+    while(stock_data === undefined) {
+      require('deasync').runLoopOnce();
+    }
+
+        console.log("stock_change_%: ", stocks.regularMarketChangePercent);       
+         if(Math.abs(stocks.regularMarketChangePercent) > 1){
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
             from: from_who,
@@ -90,10 +111,18 @@ const from_who = "REACT-STOCK@email.com";
             } 
 	    console.log(body)
           });
-         }
+         } //if(Math.abs(stocks.regularMarketChangePercent) > 1)
+
+         } // for(let key in o)
+
         }
       })
     });
 
 	    console.log(arr)
 //process.exit() 
+
+ 
+
+
+
