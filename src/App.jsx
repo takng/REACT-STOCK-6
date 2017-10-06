@@ -432,7 +432,7 @@ class App extends Component {
 
  fluctuate = (event) => {
 //  if(this.state.stocks.regularMarketChangePercent >= 1){
-  if(this.state.stocks.regularMarketChangePercent < 1){
+  if(this.state.stocks.regularMarketChangePercent > 99){
   fetch(`http://localhost:3002/fluctuate/${this.state.currentTicker}/${this.state.email}`, { 
       method: 'POST'
     })

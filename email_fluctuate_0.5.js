@@ -88,15 +88,15 @@ request(stock_url, function (error, response, body) {
         console.log("stock_change_%: ", stocks.regularMarketChangePercent);       
     };
 
-         if(Math.abs(stocks.regularMarketChangePercent) > 1){
-//         if(Math.abs(stocks.regularMarketChangePercent) > 0.5){
+//         if(Math.abs(stocks.regularMarketChangePercent) > 1){
+         if(Math.abs(stocks.regularMarketChangePercent) > 0.5){
           let mailgun = new Mailgun({ apiKey: api_key, domain: domain });
           let data = {
             from: from_who,
             to: email,
             subject: symbol,
-            text: "REACT-STOCK price fluctuate more than 1%, be alert."
-            //text: "REACT-STOCK price fluctuate more than 0.5%, be alert."
+//            text: "REACT-STOCK price fluctuate more than 1%, be alert."
+            text: "REACT-STOCK price fluctuate more than 0.5%, be alert."
           };
 
           mailgun.messages().send(data, function(err, body) {
